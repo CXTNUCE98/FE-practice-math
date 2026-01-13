@@ -1,0 +1,35 @@
+{
+  "name": "practice-math-fe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/i18n": "^10.2.1",
+    "@tanstack/vue-query": "^5.80.7",
+    "axios": "^1.6.8",
+    "boxicons": "^2.1.4",
+    "dayjs": "^1.11.19",
+    "katex": "^0.16.27",
+    "nuxt": "^3.11.1",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@element-plus/nuxt": "^1.0.8",
+    "@nuxt/image": "^1.11.0",
+    "@nuxtjs/color-mode": "^4.0.0",
+    "@types/katex": "^0.16.8",
+    "@types/node": "^20.11.0",
+    "@unocss/nuxt": "^66.5.9",
+    "@unocss/reset": "^66.5.10",
+    "@vueuse/nuxt": "^10.9.0",
+    "nuxt-api-party": "^3.4.2",
+    "unocss": "^66.5.9"
+  }
+}
