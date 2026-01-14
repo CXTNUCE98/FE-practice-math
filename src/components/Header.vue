@@ -66,7 +66,9 @@ onBeforeUnmount(() => {
         :class="isScrolled ? 'py-3' : 'py-5'">
         <div class="max-w-7xl mx-auto px-4">
             <div class="glass-card flex items-center justify-between px-6 py-3 transition-all duration-500"
-                :class="isScrolled ? 'rounded-2xl shadow-xl' : 'rounded-3xl border-transparent bg-white/0 dark:bg-slate-950/0 shadow-none'">
+                :class="isScrolled
+                    ? 'rounded-2xl shadow-xl border-slate-200/50 dark:border-slate-800/50 bg-white/80 dark:bg-slate-900/80'
+                    : 'rounded-3xl border-white/20 dark:border-white/10 bg-white/10 dark:bg-white/5 shadow-2xl shadow-slate-900/5'">
 
                 <!-- Logo -->
                 <NuxtLink to="/" class="flex items-center gap-3 group">

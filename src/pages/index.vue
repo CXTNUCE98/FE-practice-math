@@ -13,17 +13,17 @@ const stats = computed(() => [
 // Features
 const features = [
   {
-    icon: 'bx-check-double',
+    icon: 'bx bx-check-double',
     title: 'Chấm điểm tự động',
     desc: 'Hệ thống tự động chấm điểm chính xác ngay sau khi hoàn thành bài thi.'
   },
   {
-    icon: 'bx-trending-up',
+    icon: 'bx bx-trending-up',
     title: 'Phân tích kết quả',
     desc: 'Cung cấp báo cáo chi tiết về điểm số và các câu hỏi cần cải thiện.'
   },
   {
-    icon: 'bx-shield-quarter',
+    icon: 'bx bx-book-open',
     title: 'Nội dung chọn lọc',
     desc: 'Đề thi được biên soạn bám sát chương trình học và các kỳ thi quan trọng.'
   }

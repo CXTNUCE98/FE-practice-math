@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useUploadExamMutation, useDeleteExamMutation } from '~/composables/useExamMutation';
 import { useExamsQuery } from '~/composables/useExamQuery';
+import { useUsersQuery } from '~/composables/useAdmin';
+import UserHistoryModal from '~/components/Admin/UserHistoryModal.vue';
 
 definePageMeta({
   layout: 'default',
@@ -66,7 +68,15 @@ const handleUpload = () => {
   });
 };
 
-const activeTab = ref('upload'); // 'upload' | 'exams' | 'results'
+const { data: users, isPending: isLoadingUsers } = useUsersQuery();
+
+const selectedUser = ref<{ id: string, fullName: string } | null>(null);
+
+const openUserHistory = (user: any) => {
+  selectedUser.value = { id: user.id, fullName: user.fullName };
+};
+
+const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
 </script>
 
 <template>
@@ -101,6 +111,12 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'results'
             :class="activeTab === 'exams' ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
             <i class="bx bx-file text-xl"></i>
             Quản lý đề thi
+          </button>
+          <button @click="activeTab = 'users'"
+            class="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all"
+            :class="activeTab === 'users' ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
+            <i class="bx bx-group text-xl"></i>
+            Quản lý người dùng
           </button>
         </div>
 
@@ -223,9 +239,97 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'results'
               </div>
             </div>
           </div>
+
+          <!-- Users Tab -->
+          <div v-if="activeTab === 'users'" class="card p-8 animate-fade-in-top">
+            <div class="flex items-center justify-between mb-8">
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Danh sách người dùng</h2>
+              <div
+                class="px-4 py-1.5 bg-sky-50 dark:bg-sky-900/30 rounded-full text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">
+                Tổng số: {{ users?.length || 0 }}
+              </div>
+            </div>
+
+            <div v-if="isLoadingUsers" class="space-y-4 py-12">
+              <div v-for="i in 5" :key="i" class="h-20 bg-slate-50 dark:bg-slate-800/50 rounded-2xl animate-pulse">
+              </div>
+            </div>
+
+            <div v-else class="overflow-x-auto border border-slate-100 dark:border-slate-800 rounded-2xl">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                  <tr>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Người dùng</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Lớp</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Số lượt
+                      thi</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Kết quả gần nhất
+                    </th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Thao tác
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr v-for="u in users" :key="u.id"
+                    class="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-all group">
+                    <td class="px-6 py-4">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 text-white flex items-center justify-center font-bold shadow-lg shadow-sky-500/20">
+                          {{ u.fullName.charAt(0) }}
+                        </div>
+                        <div>
+                          <p class="font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors cursor-pointer"
+                            @click="openUserHistory(u)">
+                            {{ u.fullName }}
+                          </p>
+                          <p class="text-xs text-slate-400">{{ u.email }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <span v-if="u.className"
+                        class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-400">
+                        {{ u.className }}
+                      </span>
+                      <span v-else class="text-slate-300 italic text-sm">Chưa cập nhật</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                      <div
+                        class="inline-flex items-center justify-center min-w-8 h-8 px-2 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-black text-sm">
+                        {{ u.examCount }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div v-if="u.latestResult" class="space-y-0.5">
+                        <p class="text-sm font-bold text-slate-700 dark:text-slate-300 truncate max-w-[150px]">{{
+                          u.latestResult.exam.title }}</p>
+                        <p class="text-[10px] font-black text-sky-500 uppercase">{{
+                          u.latestResult.score.toFixed(1) }} điểm</p>
+                      </div>
+                      <span v-else class="text-slate-300 text-xs italic">Chưa có kết quả</span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                      <button @click="openUserHistory(u)"
+                        class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all shadow-sm">
+                        Xem lịch sử
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-if="!users || users.length === 0" class="p-12 text-center text-slate-400">
+                Chưa có người dùng nào trong hệ thống.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- User History Modal -->
+    <UserHistoryModal v-if="selectedUser" :userId="selectedUser.id" :fullName="selectedUser.fullName"
+      @close="selectedUser = null" />
   </div>
 </template>
 

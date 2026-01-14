@@ -15,6 +15,8 @@ const loginData = reactive({
 const router = useRouter();
 const { mutate: login, isPending, error } = useLoginMutation();
 
+const showPassword = ref(false);
+
 const handleLogin = () => {
   login(
     {
@@ -68,8 +70,15 @@ const handleLogin = () => {
                   khẩu</label>
                 <a href="#" class="text-xs font-bold text-blue-600 hover:text-blue-500">Quên mật khẩu?</a>
               </div>
-              <input id="password" v-model="loginData.password" name="password" type="password" required
-                class="input-field" placeholder="••••••••" />
+              <div class="relative group/input">
+                <input id="password" v-model="loginData.password" name="password"
+                  :type="showPassword ? 'text' : 'password'" required class="input-field pr-12"
+                  placeholder="••••••••" />
+                <button type="button" @click="showPassword = !showPassword"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors focus:outline-none">
+                  <i :class="['bx text-xl', showPassword ? 'bx-show' : 'bx-hide']"></i>
+                </button>
+              </div>
             </div>
           </div>
 

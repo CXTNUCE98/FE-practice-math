@@ -5,7 +5,7 @@ import type { Exam } from "~/types/practice-math";
  * Query lấy danh sách tất cả đề thi
  */
 export const useExamsQuery = () => {
-  const { getAuthHeaders } = useAuth();
+  const { isAuthenticated, getAuthHeaders } = useAuth();
 
   return useQuery({
     queryKey: ["exams"],
@@ -15,6 +15,7 @@ export const useExamsQuery = () => {
       });
       return res as unknown as Exam[];
     },
+    enabled: isAuthenticated,
   });
 };
 
@@ -22,7 +23,7 @@ export const useExamsQuery = () => {
  * Query lấy chi tiết một đề thi theo ID
  */
 export const useExamDetailQuery = (id: ComputedRef<string> | string) => {
-  const { getAuthHeaders } = useAuth();
+  const { isAuthenticated, getAuthHeaders } = useAuth();
   const examId = isRef(id) ? id : ref(id);
 
   return useQuery({
@@ -34,7 +35,7 @@ export const useExamDetailQuery = (id: ComputedRef<string> | string) => {
       });
       return res as unknown as Exam;
     },
-    enabled: computed(() => !!examId.value),
+    enabled: computed(() => isAuthenticated.value && !!examId.value),
   });
 };
 
@@ -42,7 +43,7 @@ export const useExamDetailQuery = (id: ComputedRef<string> | string) => {
  * Query lấy lịch sử thi của người dùng
  */
 export const useExamHistoryQuery = () => {
-  const { getAuthHeaders } = useAuth();
+  const { isAuthenticated, getAuthHeaders } = useAuth();
 
   return useQuery({
     queryKey: ["exam-history"],
@@ -52,6 +53,7 @@ export const useExamHistoryQuery = () => {
       });
       return res as unknown as any[];
     },
+    enabled: isAuthenticated,
   });
 };
 
@@ -59,7 +61,7 @@ export const useExamHistoryQuery = () => {
  * Query lấy chi tiết kết quả bài thi
  */
 export const useResultDetailQuery = (id: ComputedRef<string> | string) => {
-  const { getAuthHeaders } = useAuth();
+  const { isAuthenticated, getAuthHeaders } = useAuth();
   const resultId = isRef(id) ? id : ref(id);
 
   return useQuery({
@@ -71,6 +73,6 @@ export const useResultDetailQuery = (id: ComputedRef<string> | string) => {
       });
       return res;
     },
-    enabled: computed(() => !!resultId.value),
+    enabled: computed(() => isAuthenticated.value && !!resultId.value),
   });
 };

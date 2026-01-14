@@ -4,14 +4,22 @@ import type { UserResponseDto } from "~/types/practice-math";
 // Loại dữ liệu trả về của API users (User + count)
 // Cần define type chính xác nếu có thể, tạm thời extend
 export interface UserWithExamCount extends UserResponseDto {
+  className?: string;
   examCount: number;
+  latestResult?: {
+    score: number;
+    startedAt: string;
+    exam: {
+      title: string;
+    };
+  };
 }
 
 /**
  * Query lấy danh sách người dùng (Admin)
  */
 export const useUsersQuery = () => {
-  const { getAuthHeaders } = useAuth();
+  const { isAuthenticated, getAuthHeaders } = useAuth();
 
   return useQuery({
     queryKey: ["admin-users"],
@@ -21,6 +29,7 @@ export const useUsersQuery = () => {
       });
       return res as unknown as UserWithExamCount[];
     },
+    enabled: isAuthenticated,
   });
 };
 
@@ -28,7 +37,7 @@ export const useUsersQuery = () => {
  * Query lấy lịch sử thi của user cụ thể (Admin)
  */
 export const useAdminUserHistoryQuery = (userId: Ref<string> | string) => {
-  const { getAuthHeaders } = useAuth();
+  const { isAuthenticated, getAuthHeaders } = useAuth();
   const idRef = isRef(userId) ? userId : ref(userId);
 
   return useQuery({
@@ -40,6 +49,6 @@ export const useAdminUserHistoryQuery = (userId: Ref<string> | string) => {
       });
       return res as unknown as any[]; // Tạm thời any[], sẽ define type Result sau
     },
-    enabled: computed(() => !!idRef.value),
+    enabled: computed(() => isAuthenticated.value && !!idRef.value),
   });
 };

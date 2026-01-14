@@ -14,6 +14,8 @@ const registerData = reactive({
 
 const { mutate: register, isPending, error, isSuccess } = useRegisterMutation();
 
+const showPassword = ref(false);
+
 const handleRegister = () => {
   register(registerData, {
     onSuccess: () => {
@@ -87,8 +89,15 @@ const handleRegister = () => {
               <div class="space-y-2">
                 <label for="password" class="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Mật
                   khẩu</label>
-                <input id="password" v-model="registerData.password" name="password" type="password" required
-                  class="input-field" placeholder="••••••••" />
+                <div class="relative group/input">
+                  <input id="password" v-model="registerData.password" name="password"
+                    :type="showPassword ? 'text' : 'password'" required class="input-field pr-12"
+                    placeholder="••••••••" />
+                  <button type="button" @click="showPassword = !showPassword"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors focus:outline-none">
+                    <i :class="['bx text-xl', showPassword ? 'bx-show' : 'bx-hide']"></i>
+                  </button>
+                </div>
               </div>
             </div>
 

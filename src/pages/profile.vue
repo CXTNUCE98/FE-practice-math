@@ -6,7 +6,7 @@ definePageMeta({
     middleware: 'auth',
 });
 
-const { user, fetchUser } = useAuth();
+const { user, fetchUserProfile } = useAuth();
 const { mutate: updateProfile, isPending: isUpdating, error: updateError, isSuccess: isUpdateSuccess } = useUpdateProfileMutation();
 const { mutate: changePassword, isPending: isChangingPassword, error: passwordError, isSuccess: isPasswordSuccess } = useChangePasswordMutation();
 
@@ -40,10 +40,14 @@ const handleUpdateProfile = () => {
         role: profileData.role,
     }, {
         onSuccess: () => {
-            fetchUser(); // Reload user data
+            fetchUserProfile(); // Reload user data
         }
     });
 };
+
+const showOldPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 const handleChangePassword = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -194,20 +198,41 @@ const handleChangePassword = () => {
                                 <div class="space-y-2">
                                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Mật
                                         khẩu hiện tại</label>
-                                    <input v-model="passwordData.oldPassword" type="password" class="input-field"
-                                        placeholder="••••••••" required />
+                                    <div class="relative group/input">
+                                        <input v-model="passwordData.oldPassword"
+                                            :type="showOldPassword ? 'text' : 'password'" class="input-field pr-12"
+                                            placeholder="••••••••" required />
+                                        <button type="button" @click="showOldPassword = !showOldPassword"
+                                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors focus:outline-none">
+                                            <i :class="['bx text-xl', showOldPassword ? 'bx-show' : 'bx-hide']"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Mật
                                         khẩu mới</label>
-                                    <input v-model="passwordData.newPassword" type="password" class="input-field"
-                                        placeholder="Tối thiểu 6 ký tự" required minlength="6" />
+                                    <div class="relative group/input">
+                                        <input v-model="passwordData.newPassword"
+                                            :type="showNewPassword ? 'text' : 'password'" class="input-field pr-12"
+                                            placeholder="Tối thiểu 6 ký tự" required minlength="6" />
+                                        <button type="button" @click="showNewPassword = !showNewPassword"
+                                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors focus:outline-none">
+                                            <i :class="['bx text-xl', showNewPassword ? 'bx-show' : 'bx-hide']"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Xác
                                         nhận mật khẩu mới</label>
-                                    <input v-model="passwordData.confirmPassword" type="password" class="input-field"
-                                        placeholder="Nhập lại mật khẩu mới" required />
+                                    <div class="relative group/input">
+                                        <input v-model="passwordData.confirmPassword"
+                                            :type="showConfirmPassword ? 'text' : 'password'" class="input-field pr-12"
+                                            placeholder="Nhập lại mật khẩu mới" required />
+                                        <button type="button" @click="showConfirmPassword = !showConfirmPassword"
+                                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors focus:outline-none">
+                                            <i :class="['bx text-xl', showConfirmPassword ? 'bx-show' : 'bx-hide']"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
