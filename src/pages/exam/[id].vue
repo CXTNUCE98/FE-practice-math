@@ -355,12 +355,11 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
                     : 'bg-slate-50 dark:bg-slate-900/50 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                 ]">
                 {{ idx + 1 }}
-                {{ idx + 1 }}
                 <div v-if="ans !== -1"
                   class="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900"
                   :class="[
                     isReviewMode
-                      ? (ans === exam.questions[idx].correctAnswer ? 'bg-emerald-500' : 'bg-red-500')
+                      ? (ans === exam?.questions?.[idx]?.correctAnswer ? 'bg-emerald-500' : 'bg-red-500')
                       : 'bg-emerald-500'
                   ]">
                 </div>

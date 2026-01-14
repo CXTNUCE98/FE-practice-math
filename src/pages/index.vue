@@ -2,6 +2,7 @@
 import { useExamsQuery } from '~/composables/useExamQuery';
 
 const localePath = useLocalePath();
+const { isAuthenticated } = useAuth();
 const { data: exams, isPending, error } = useExamsQuery();
 
 // Stats for hero
@@ -64,17 +65,43 @@ const features = [
               độ học tập cá nhân hóa.
             </p>
 
-            <div
-              class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up-delay">
-              <NuxtLink to="#exams" class="btn-primary !px-8 !py-4 text-base shadow-blue-600/20">
-                Bắt đầu học ngay
-                <i class="bx bx-run text-xl"></i>
-              </NuxtLink>
-              <NuxtLink to="/register" class="btn-secondary !px-8 !py-4 text-base">
-                Khám phá tính năng
-                <i class="bx bx-compass text-xl"></i>
-              </NuxtLink>
-            </div>
+            <client-only>
+              <div
+                class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up-delay">
+                <!-- Đã đăng nhập -->
+                <template v-if="isAuthenticated">
+                  <NuxtLink :to="localePath('/exams')" class="btn-primary !px-8 !py-4 text-base shadow-blue-600/20">
+                    Học tập ngay
+                    <i class="bx bx-run text-xl"></i>
+                  </NuxtLink>
+                  <NuxtLink to="#features" class="btn-secondary !px-8 !py-4 text-base">
+                    Khám phá tính năng
+                    <i class="bx bx-compass text-xl"></i>
+                  </NuxtLink>
+                </template>
+
+                <!-- Chưa đăng nhập -->
+                <template v-else>
+                  <NuxtLink to="#exams" class="btn-primary !px-8 !py-4 text-base shadow-blue-600/20">
+                    Bắt đầu học ngay
+                    <i class="bx bx-run text-xl"></i>
+                  </NuxtLink>
+                  <NuxtLink :to="localePath('/register')" class="btn-secondary !px-8 !py-4 text-base">
+                    Khám phá tính năng
+                    <i class="bx bx-compass text-xl"></i>
+                  </NuxtLink>
+                </template>
+              </div>
+
+              <!-- Loader for SSR -->
+              <template #fallback>
+                <div
+                  class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up-delay">
+                  <div class="w-48 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+                  <div class="w-48 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+                </div>
+              </template>
+            </client-only>
 
             <!-- Enhanced Stats -->
             <div
@@ -126,7 +153,7 @@ const features = [
     </section>
 
     <!-- Features Section -->
-    <section class="py-32 px-4 relative">
+    <section id="features" class="py-32 px-4 relative">
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-20">
           <h2 class="section-title mb-4">Tại sao chọn MathPractice?</h2>
