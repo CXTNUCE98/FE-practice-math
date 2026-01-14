@@ -54,3 +54,23 @@ export const useExamHistoryQuery = () => {
     },
   });
 };
+
+/**
+ * Query lấy chi tiết kết quả bài thi
+ */
+export const useResultDetailQuery = (id: ComputedRef<string> | string) => {
+  const { getAuthHeaders } = useAuth();
+  const resultId = isRef(id) ? id : ref(id);
+
+  return useQuery({
+    queryKey: ["exam-result", resultId],
+    queryFn: async (): Promise<any> => {
+      const res = await $practiceMathApi("/exams/results/{id}", {
+        headers: getAuthHeaders(),
+        path: { id: resultId.value },
+      });
+      return res;
+    },
+    enabled: computed(() => !!resultId.value),
+  });
+};

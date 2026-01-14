@@ -11,6 +11,7 @@ const { mutate: submitExam, isPending: isSubmitting, isSuccess: isSubmitted, dat
 const userAnswers = ref<number[]>([]);
 const timeLeft = ref(0);
 const currentQuestionIndex = ref(0);
+const isReviewMode = ref(false);
 let timerInterval: any = null;
 
 /**
@@ -143,7 +144,8 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
           </div>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button @click="isSubmitted = false" class="btn-secondary !px-10 !py-4 font-bold order-2 sm:order-1">
+            <button @click="isReviewMode = true; isSubmitted = false"
+              class="btn-secondary !px-10 !py-4 font-bold order-2 sm:order-1">
               <i class="bx bx-show text-xl"></i>
               Xem lại bài làm
             </button>
@@ -175,11 +177,15 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
         </div>
 
         <div class="flex items-center gap-3">
-          <button @click="handleSubmit"
+          <button v-if="!isReviewMode" @click="handleSubmit"
             class="btn-primary !px-10 !py-4 !text-base shadow-emerald-500/20 !bg-emerald-600 !hover:bg-emerald-700">
             Nộp bài ngay
             <i class="bx bx-send text-xl"></i>
           </button>
+          <NuxtLink v-else to="/" class="btn-secondary !px-8 !py-3">
+            <i class="bx bx-left-arrow-alt"></i>
+            Thoát xem lại
+          </NuxtLink>
         </div>
       </div>
 
@@ -225,27 +231,61 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
 
               <div class="grid grid-cols-1 gap-4">
                 <button v-for="(option, idx) in currentQuestion.options" :key="idx"
-                  @click="handleSelectAnswer(currentQuestionIndex, idx)"
+                  @click="!isReviewMode && handleSelectAnswer(currentQuestionIndex, idx)"
                   class="flex items-center gap-6 p-6 rounded-3xl border-2 transition-all text-left relative overflow-hidden group/opt"
                   :class="[
-                    userAnswers[currentQuestionIndex] === idx
+                    !isReviewMode && userAnswers[currentQuestionIndex] === idx
                       ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-500/10 shadow-lg shadow-blue-600/5'
-                      : 'border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 bg-white dark:bg-slate-900'
+                      : isReviewMode
+                        ? (idx === currentQuestion.correctAnswer
+                          ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-500/10'
+                          : userAnswers[currentQuestionIndex] === idx
+                            ? 'border-red-500 bg-red-50/50 dark:bg-red-500/10'
+                            : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 opacity-60')
+                        : 'border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 bg-white dark:bg-slate-900',
+                    isReviewMode && 'cursor-default'
                   ]">
-                  <div class="absolute inset-0 bg-blue-600 opacity-0 group-hover/opt:opacity-[0.02] transition-opacity">
+                  <div v-if="!isReviewMode"
+                    class="absolute inset-0 bg-blue-600 opacity-0 group-hover/opt:opacity-[0.02] transition-opacity">
                   </div>
 
                   <span
                     class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-2xl font-black transition-all text-xl font-heading shadow-sm"
                     :class="[
-                      userAnswers[currentQuestionIndex] === idx
+                      !isReviewMode && userAnswers[currentQuestionIndex] === idx
                         ? 'bg-blue-600 text-white scale-110 rotate-3'
-                        : 'bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover/opt:scale-110 group-hover/opt:bg-blue-100 dark:group-hover/opt:bg-blue-900/30 group-hover/opt:text-blue-600'
+                        : isReviewMode
+                          ? (idx === currentQuestion.correctAnswer
+                            ? 'bg-emerald-600 text-white'
+                            : userAnswers[currentQuestionIndex] === idx
+                              ? 'bg-red-600 text-white'
+                              : 'bg-slate-50 dark:bg-slate-800 text-slate-400')
+                          : 'bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover/opt:scale-110 group-hover/opt:bg-blue-100 dark:group-hover/opt:bg-blue-900/30 group-hover/opt:text-blue-600'
                     ]">
                     {{ String.fromCharCode(65 + idx) }}
                   </span>
-                  <MathRenderer :content="option" class="font-bold text-slate-700 dark:text-slate-200 text-lg" />
+                  <div class="flex-grow flex justify-between items-center">
+                    <MathRenderer :content="option" class="font-bold text-slate-700 dark:text-slate-200 text-lg" />
+                    <div v-if="isReviewMode" class="flex items-center">
+                      <i v-if="idx === currentQuestion.correctAnswer"
+                        class="bx bxs-check-circle text-2xl text-emerald-500"></i>
+                      <i v-else-if="userAnswers[currentQuestionIndex] === idx"
+                        class="bx bxs-x-circle text-2xl text-red-500"></i>
+                    </div>
+                  </div>
                 </button>
+              </div>
+
+              <!-- Explanation Area -->
+              <div v-if="isReviewMode && currentQuestion.explanation"
+                class="mt-8 p-6 bg-blue-50/50 dark:bg-blue-500/5 rounded-3xl border border-blue-100 dark:border-blue-900/30 animate-fade-in">
+                <div
+                  class="flex items-center gap-2 mb-4 text-blue-600 dark:text-blue-400 font-black uppercase text-xs tracking-widest">
+                  <i class="bx bx-bulb text-lg"></i>
+                  Lời giải chi tiết
+                </div>
+                <MathRenderer :content="currentQuestion.explanation" block
+                  class="text-slate-700 dark:text-slate-300 leading-relaxed" />
               </div>
             </div>
           </div>
@@ -315,8 +355,14 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
                     : 'bg-slate-50 dark:bg-slate-900/50 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                 ]">
                 {{ idx + 1 }}
+                {{ idx + 1 }}
                 <div v-if="ans !== -1"
-                  class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900">
+                  class="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900"
+                  :class="[
+                    isReviewMode
+                      ? (ans === exam.questions[idx].correctAnswer ? 'bg-emerald-500' : 'bg-red-500')
+                      : 'bg-emerald-500'
+                  ]">
                 </div>
               </button>
             </div>

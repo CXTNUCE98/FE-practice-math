@@ -14,7 +14,7 @@ const formatDate = (date: string) => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white dark:bg-slate-950 pb-20">
+    <div class="min-h-screen bg-white dark:bg-slate-950 pt-40">
         <div class="max-w-5xl mx-auto px-4 py-12">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                 <div class="flex items-center gap-5">
@@ -96,6 +96,11 @@ const formatDate = (date: string) => {
                                 {{ result.score >= 8 ? 'Giỏi' : (result.score >= 5 ? 'Đạt' : 'Chưa đạt') }}
                             </span>
                         </div>
+                        <NuxtLink :to="`/exam/review/${result.id}`"
+                            class="btn-secondary !px-5 !py-2.5 !text-xs font-bold whitespace-nowrap">
+                            <i class="bx bx-show text-base"></i>
+                            Xem lại bài
+                        </NuxtLink>
                     </div>
                 </div>
             </div>
