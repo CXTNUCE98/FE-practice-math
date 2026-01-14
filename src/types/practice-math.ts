@@ -10,9 +10,12 @@ export interface User {
   id: string;
   email: string;
   fullName: string;
+  className?: string;
   role: Role;
   createdAt: string;
 }
+
+export type UserResponseDto = User;
 
 /**
  * Dữ liệu câu hỏi trong đề thi

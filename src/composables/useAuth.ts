@@ -1,25 +1,25 @@
-import { ref, computed, onMounted } from 'vue';
-import type { User } from '~/types/api';
+import { ref, computed, onMounted } from "vue";
+import type { User } from "~/types/practice-math";
 
 // Token storage key
-const TOKEN_KEY = 'accessToken';
-const PROFILE_KEY = 'userProfile';
+const TOKEN_KEY = "accessToken";
+const PROFILE_KEY = "userProfile";
 
 // Helper to decode JWT
 function parseJwt(token: string) {
   try {
     if (!process.client) return null;
 
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
       window
         .atob(base64)
-        .split('')
+        .split("")
         .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
         })
-        .join(''),
+        .join("")
     );
 
     return JSON.parse(jsonPayload);
@@ -29,13 +29,22 @@ function parseJwt(token: string) {
 }
 
 export function useAuth() {
-  // Use useState for shared state across components
-  const accessToken = useState<string | null>('auth_accessToken', () => null);
-  const user = useState<User | null>('auth_user', () => null);
-  const isFetchingProfile = useState<boolean>('auth_isFetchingProfile', () => false);
+  // Use useCookie for token persistence (works on SSR and Client)
+  const accessToken = useCookie<string | null>(TOKEN_KEY, {
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    default: () => null,
+  });
+
+  const user = useState<User | null>("auth_user", () => null);
+  const isFetchingProfile = useState<boolean>(
+    "auth_isFetchingProfile",
+    () => false
+  );
 
   // Kiểm tra token hợp lệ (không rỗng và không phải chuỗi "undefined")
-  const isAuthenticated = computed(() => !!accessToken.value && accessToken.value !== 'undefined');
+  const isAuthenticated = computed(
+    () => !!accessToken.value && accessToken.value !== "undefined"
+  );
 
   // Helper to save profile to cache
   const saveProfileToCache = (userData: User) => {
@@ -69,7 +78,7 @@ export function useAuth() {
    */
   const getAuthHeaders = (): HeadersInit => {
     // Chỉ trả về header Authorization nếu token thực sự hợp lệ
-    if (!accessToken.value || accessToken.value === 'undefined') {
+    if (!accessToken.value || accessToken.value === "undefined") {
       return {};
     }
 
@@ -86,20 +95,19 @@ export function useAuth() {
 
     try {
       isFetchingProfile.value = true;
-      const decoded = parseJwt(accessToken.value as string);
-      const userId = decoded?.sub || decoded?.id;
+      const data = await $practiceMathApi("/auth/me", {
+        headers: getAuthHeaders(),
+      });
 
-      if (userId) {
-        const userData = await $motobikertoursApi('/users/{id}', {
-          headers: getAuthHeaders(),
-          path: { id: userId },
-        });
-        const updatedUser = userData as unknown as User;
-        user.value = updatedUser;
-        saveProfileToCache(updatedUser);
-      }
+      const updatedUser = data as unknown as User;
+      user.value = updatedUser;
+      saveProfileToCache(updatedUser);
     } catch (error) {
-      console.log('Failed to fetch user profile', error);
+      console.log("Failed to fetch user profile", error);
+      // Nếu lỗi 401 thì logout
+      if ((error as any)?.statusCode === 401) {
+        logout();
+      }
     } finally {
       isFetchingProfile.value = false;
     }
@@ -108,24 +116,22 @@ export function useAuth() {
   // Initial state from token (client-side only)
   const initUserFromToken = () => {
     if (process.client && accessToken.value) {
+      // Trước mắt decode token để lấy thông tin cơ bản
       const decoded = parseJwt(accessToken.value);
       if (decoded) {
         const cachedProfile = getProfileFromCache();
         const userId = decoded.sub || decoded.id;
 
-        // If we don't have a user yet, or the cached user matches the token
-        if (!user.value) {
-          if (cachedProfile && cachedProfile.id === userId) {
-            user.value = cachedProfile;
-          } else {
+        // Ưu tiên dùng cache profile nếu có và khớp ID
+        if (cachedProfile && cachedProfile.id === userId) {
+          user.value = cachedProfile;
+        } else {
+          // Fallback nhẹ nếu chưa load profile
+          if (!user.value) {
             user.value = {
               id: userId,
               email: decoded.email,
-              userName: decoded.userName || 'User',
-              role: decoded.role || 'USER',
-              provider: null,
-              avatar: decoded.avatar,
-              createdAt: '',
+              role: decoded.role || "USER",
             } as User;
           }
         }
@@ -137,15 +143,17 @@ export function useAuth() {
    * Login user and update auth state
    */
   const login = (token: string) => {
-    if (!token || token === 'undefined') {
-      console.warn('Attempted to login with invalid token');
+    if (!token || token === "undefined") {
+      console.warn("Attempted to login with invalid token");
       return;
     }
 
-    if (process.client) {
-      localStorage.setItem(TOKEN_KEY, token);
-    }
+    // useCookie updates the cookie automatically
     accessToken.value = token;
+
+    // Legacy support: remove from localStorage if it exists to avoid confusion?
+    // Or keep for sync? Let's just rely on cookie.
+
     initUserFromToken();
     fetchUserProfile(true);
   };
@@ -155,10 +163,11 @@ export function useAuth() {
    */
   const logout = () => {
     if (process.client) {
-      localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(PROFILE_KEY);
+      // Also remove local token if it exists (for clean migration)
+      localStorage.removeItem(TOKEN_KEY);
     }
-    accessToken.value = null;
+    accessToken.value = null; // Clears cookie
     user.value = null;
   };
 
@@ -166,21 +175,19 @@ export function useAuth() {
    * Check if user is authenticated
    */
   const checkAuth = () => {
-    if (process.client) {
-      const token = localStorage.getItem(TOKEN_KEY);
-      if (token && token !== accessToken.value) {
-        accessToken.value = token;
-        initUserFromToken();
-      }
-    }
+    // With headers/cookies, we check access token directly
     return isAuthenticated.value;
   };
 
-  // Initialize on client side if needed
-  if (process.client && !accessToken.value) {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-      accessToken.value = token;
+  // Initialize
+  if (process.client) {
+    // Migration: If no cookie but localStorage has token, set cookie
+    const localToken = localStorage.getItem(TOKEN_KEY);
+    if (!accessToken.value && localToken && localToken !== "undefined") {
+      accessToken.value = localToken;
+    }
+
+    if (accessToken.value) {
       initUserFromToken();
       // Optionally fetch profile in background
       if (!isFetchingProfile.value && (!user.value || !user.value.createdAt)) {

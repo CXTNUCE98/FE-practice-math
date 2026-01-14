@@ -7,9 +7,12 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "openapi:practice-math": "tsx ./s-openapi.ts http://localhost:3001/api-docs-json ./src/schemas/practiceMathApi.json"
   },
   "dependencies": {
+    "@iconify-json/carbon": "^1.2.16",
+    "@iconify-json/ep": "^1.2.3",
     "@nuxtjs/i18n": "^10.2.1",
     "@tanstack/vue-query": "^5.80.7",
     "axios": "^1.6.8",
@@ -21,6 +24,7 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@antfu/utils": "^9.3.0",
     "@element-plus/nuxt": "^1.0.8",
     "@nuxt/image": "^1.11.0",
     "@nuxtjs/color-mode": "^4.0.0",
@@ -29,7 +33,10 @@
     "@unocss/nuxt": "^66.5.9",
     "@unocss/reset": "^66.5.10",
     "@vueuse/nuxt": "^10.9.0",
+    "citty": "^0.1.6",
     "nuxt-api-party": "^3.4.2",
+    "ofetch": "^1.5.1",
+    "tsx": "^4.21.0",
     "unocss": "^66.5.9"
   }
 }

@@ -10,9 +10,10 @@ export const useExamsQuery = () => {
   return useQuery({
     queryKey: ["exams"],
     queryFn: async (): Promise<Exam[]> => {
-      return await $practiceMathApi("/exams", {
+      const res = await $practiceMathApi("/exams", {
         headers: getAuthHeaders(),
       });
+      return res as unknown as Exam[];
     },
   });
 };
@@ -27,9 +28,11 @@ export const useExamDetailQuery = (id: ComputedRef<string> | string) => {
   return useQuery({
     queryKey: ["exams", examId],
     queryFn: async (): Promise<Exam> => {
-      return await $practiceMathApi(`/exams/${examId.value}`, {
+      const res = await $practiceMathApi("/exams/{id}", {
         headers: getAuthHeaders(),
+        path: { id: examId.value },
       });
+      return res as unknown as Exam;
     },
     enabled: computed(() => !!examId.value),
   });
@@ -44,9 +47,10 @@ export const useExamHistoryQuery = () => {
   return useQuery({
     queryKey: ["exam-history"],
     queryFn: async (): Promise<any[]> => {
-      return await $practiceMathApi("/exams/history", {
+      const res = await $practiceMathApi("/exams/history", {
         headers: getAuthHeaders(),
       });
+      return res as unknown as any[];
     },
   });
 };

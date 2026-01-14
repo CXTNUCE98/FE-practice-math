@@ -44,7 +44,8 @@ export default defineNuxtConfig({
   apiParty: {
     endpoints: {
       practiceMathApi: {
-        url: "http://localhost:3000",
+        url: "http://localhost:3001",
+        schema: resolve("./src/schemas/practiceMathApi.json"),
       },
     },
   },
@@ -58,7 +59,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-04-15",
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3000",
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3001",
     },
   },
 });

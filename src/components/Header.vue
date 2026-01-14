@@ -8,23 +8,33 @@ const isScrolled = ref(false)
 const showMobileMenu = ref(false)
 
 const handleLogout = () => {
-    if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
-        logout()
-        router.push('/')
-    }
+    ElMessageBox.confirm(
+        'Bạn có chắc chắn muốn đăng xuất?',
+        'Xác nhận đăng xuất',
+        {
+            confirmButtonText: 'Đăng xuất',
+            cancelButtonText: 'Hủy',
+            type: 'warning',
+            confirmButtonClass: 'btn-primary-important',
+            cancelButtonClass: 'btn-secondary-important',
+        }
+    )
+        .then(() => {
+            logout()
+            router.push('/')
+        })
+        .catch(() => {})
 }
 
-// Xử lý sự kiện cuộn trang
 const handleScroll = () => {
     if (process.client) {
-        isScrolled.value = window.scrollY > 10
+        isScrolled.value = window.scrollY > 0
     }
 }
 
-// Menu chính
 const menuItems = computed(() => [
     { name: 'Trang chủ', path: localePath('/') },
-    { name: 'Lịch sử thi', path: localePath('/exam/history'), auth: true },
+    { name: 'Lịch sử', path: localePath('/history'), auth: true },
     { name: 'Quản trị', path: localePath('/admin'), role: 'ADMIN' },
 ].filter(item => {
     if (item.auth && !isAuthenticated.value) return false
@@ -54,116 +64,120 @@ onBeforeUnmount(() => {
 
 <template>
     <header
-        class="fixed top-0 left-0 right-0 z-[999] border-b transition-all duration-300 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
-        :class="isScrolled ? 'shadow-lg h-16 md:h-20' : 'h-16 md:h-20'">
-        <div class="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+        class="fixed top-0 left-0 right-0 z-[999] transition-all duration-300 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md"
+        :class="isScrolled ? 'border-b border-slate-100 dark:border-slate-800' : 'border-b border-transparent'">
+        <div class="max-w-7xl mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
             <!-- Logo -->
-            <NuxtLink to="/" class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-sky-500 rounded-xl flex items-center justify-center text-white font-black text-xl italic shadow-lg shadow-sky-500/20">
+            <NuxtLink to="/" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 rounded bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-bold text-lg transition-transform group-hover:scale-110">
                     M
                 </div>
-                <span class="text-xl md:text-2xl font-black tracking-tighter uppercase italic text-slate-900 dark:text-white">
-                    Math<span class="text-sky-500">Practice</span>
+                <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                    Math<span class="text-blue-600">Practice</span>
                 </span>
             </NuxtLink>
 
-            <!-- Navigation -->
-            <nav class="hidden lg:flex items-center gap-6">
-                <NuxtLink 
-                    v-for="item in menuItems" 
-                    :key="item.path" 
-                    :to="item.path"
-                    class="text-sm font-bold transition-all px-4 py-2 rounded-xl"
+            <!-- Nav -->
+            <nav class="hidden md:flex items-center gap-1">
+                <NuxtLink v-for="item in menuItems" :key="item.path" :to="item.path"
+                    class="px-4 py-2 rounded-lg text-sm font-semibold transition-all" 
                     :class="[
                         isActive(item.path)
-                            ? 'bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400'
-                            : 'text-slate-600 dark:text-slate-400 hover:text-sky-500 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    ]"
-                >
+                            ? 'text-slate-900 dark:text-white'
+                            : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                    ]">
                     {{ item.name }}
+                    <div v-show="isActive(item.path)" class="h-0.5 w-1/2 bg-blue-600 mt-0.5 rounded-full mx-auto"></div>
                 </NuxtLink>
             </nav>
 
-            <!-- User Actions -->
-            <div class="flex items-center gap-4">
-                <!-- Theme Toggle -->
-                <button @click="toggleTheme" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-all">
-                    <i v-if="theme === 'dark'" class="bx bx-sun text-2xl"></i>
-                    <i v-else class="bx bx-moon text-2xl"></i>
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Theme -->
+                <button @click="toggleTheme" 
+                    class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                    <i v-if="theme === 'dark'" class="bx bx-sun text-xl"></i>
+                    <i v-else class="bx bx-moon text-xl"></i>
                 </button>
 
-                <div v-if="!isAuthenticated" class="hidden md:flex gap-2">
-                    <NuxtLink to="/login" class="px-6 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
+                <!-- Auth -->
+                <div v-if="!isAuthenticated" class="hidden sm:flex items-center gap-2">
+                    <NuxtLink to="/login" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
                         Đăng nhập
                     </NuxtLink>
-                    <NuxtLink to="/register" class="btn-primary !px-6 !py-2.5 !text-sm">
-                        Đăng ký
+                    <NuxtLink to="/register" class="btn-primary !text-[13px] !px-5 !py-2">
+                        Tham gia ngay
                     </NuxtLink>
                 </div>
 
-                <!-- User Dropdown -->
+                <!-- User -->
                 <div v-else class="relative group">
-                    <button class="flex items-center gap-3 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-                        <div class="w-8 h-8 rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-xs uppercase">
+                    <button class="flex items-center gap-2.5 p-1 rounded-full hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                        <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-xs ring-1 ring-slate-200 dark:ring-slate-700">
                             {{ user?.fullName?.charAt(0) || 'U' }}
                         </div>
-                        <span class="hidden md:block text-sm font-bold text-slate-700 dark:text-slate-300 pr-2">
-                            {{ user?.fullName }}
-                        </span>
+                        <i class="bx bx-chevron-down text-slate-400 text-lg"></i>
                     </button>
-                    
-                    <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-50">
-                        <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 mb-2">
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Tài khoản</p>
-                            <p class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ user?.email }}</p>
+
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-100 dark:border-slate-800 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 transform translate-y-2 group-hover:translate-y-0">
+                        <div class="px-4 py-3 border-b border-slate-50 dark:border-slate-800 mb-2">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Tài khoản</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ user?.fullName || user?.email }}</p>
+                            <p class="text-xs text-slate-400 truncate">{{ user?.email }}</p>
                         </div>
-                        <button 
-                            @click="handleLogout"
-                            class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold flex items-center gap-2"
-                        >
-                            <i class="bx bx-log-out text-lg"></i>
-                            Đăng xuất
-                        </button>
+                        
+                        <NuxtLink to="/profile" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium transition-colors">
+                            <i class="bx bx-cog text-lg opacity-50"></i>
+                            Cài đặt cá nhân
+                        </NuxtLink>
+                        
+                        <div class="mt-2 pt-2 border-t border-slate-50 dark:border-slate-800">
+                            <button @click="handleLogout" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 font-semibold transition-colors">
+                                <i class="bx bx-log-out-circle text-lg opacity-80"></i>
+                                Đăng xuất
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <button @click="showMobileMenu = !showMobileMenu" class="lg:hidden p-2 text-slate-500 text-3xl">
-                    <i v-if="!showMobileMenu" class="bx bx-menu-alt-right"></i>
-                    <i v-else class="bx bx-x"></i>
+                <!-- Mobile Menu -->
+                <button @click="showMobileMenu = !showMobileMenu" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400">
+                    <i v-if="!showMobileMenu" class="bx bx-menu-alt-right text-2xl"></i>
+                    <i v-else class="bx bx-x text-2xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu Overlay -->
-        <Transition
-            enter-active-class="transition duration-300 ease-out"
-            enter-from-class="opacity-0 translate-y-[-20px]"
-            enter-to-class="opacity-100 translate-y-0"
-            leave-active-class="transition duration-200 ease-in"
-            leave-from-class="opacity-100 translate-y-0"
-            leave-to-class="opacity-0 translate-y-[-20px]"
-        >
-            <div v-if="showMobileMenu" class="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xl p-4 space-y-2">
-                <NuxtLink 
-                    v-for="item in menuItems" 
-                    :key="item.path" 
-                    :to="item.path"
-                    @click="showMobileMenu = false"
-                    class="block px-4 py-3 rounded-xl font-bold transition-all"
-                    :class="[
-                        isActive(item.path)
-                            ? 'bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400'
-                            : 'text-slate-600 dark:text-slate-400'
-                    ]"
-                >
-                    {{ item.name }}
-                </NuxtLink>
-                <div v-if="!isAuthenticated" class="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-2">
-                    <NuxtLink to="/login" class="flex-1 text-center py-3 font-bold text-slate-600 bg-slate-50 dark:bg-slate-800 rounded-xl">Đăng nhập</NuxtLink>
-                    <NuxtLink to="/register" class="flex-1 text-center py-3 font-bold text-white bg-sky-500 rounded-xl">Đăng ký</NuxtLink>
+        <Transition enter-active-class="transition duration-200" enter-from-class="opacity-0 -translate-y-4" enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition duration-150" leave-from-class="opacity-100" leave-to-class="opacity-0">
+            <div v-if="showMobileMenu" class="md:hidden fixed inset-x-0 top-[64px] bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 p-6 z-[998]">
+                <nav class="space-y-4">
+                    <NuxtLink v-for="item in menuItems" :key="item.path" :to="item.path" @click="showMobileMenu = false"
+                        class="block text-lg font-bold transition-colors" :class="isActive(item.path) ? 'text-blue-600' : 'text-slate-900 dark:text-white'">
+                        {{ item.name }}
+                    </NuxtLink>
+                </nav>
+                
+                <div v-if="!isAuthenticated" class="mt-8 pt-8 border-t border-slate-50 dark:border-slate-800 space-y-4">
+                    <NuxtLink to="/login" @click="showMobileMenu = false" class="block text-center py-3 text-sm font-bold border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white">
+                        Đăng nhập
+                    </NuxtLink>
+                    <NuxtLink to="/register" @click="showMobileMenu = false" class="btn-primary !w-full !text-center !py-3">
+                        Tham gia ngay
+                    </NuxtLink>
                 </div>
             </div>
         </Transition>
     </header>
 </template>
+
+<style>
+.btn-primary-important {
+    @apply bg-red-500! text-white! border-none!;
+}
+.btn-secondary-important {
+    @apply bg-slate-100! text-slate-900! border-none!;
+}
+</style>

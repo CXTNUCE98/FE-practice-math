@@ -1,0 +1,552 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đăng ký thành công"
+          },
+          "400": {
+            "description": "Dữ liệu không hợp lệ hoặc Email đã tồn tại"
+          }
+        },
+        "summary": "Đăng ký tài khoản người dùng mới",
+        "tags": [
+          "Xác thực (Auth)"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đăng nhập thành công, trả về Access Token"
+          },
+          "401": {
+            "description": "Sai email hoặc mật khẩu"
+          }
+        },
+        "summary": "Đăng nhập vào hệ thống",
+        "tags": [
+          "Xác thực (Auth)"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Thông tin người dùng",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Chưa đăng nhập"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lấy thông tin cá nhân của người dùng hiện tại",
+        "tags": [
+          "Xác thực (Auth)"
+        ]
+      }
+    },
+    "/exams/upload": {
+      "post": {
+        "operationId": "ExamController_uploadExam",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File Word đề thi"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Đề thi cuối kỳ Toán 10",
+                    "description": "Tiêu đề đề thi"
+                  },
+                  "duration": {
+                    "type": "string",
+                    "example": "90",
+                    "description": "Thời gian làm bài (phút)"
+                  }
+                },
+                "required": [
+                  "file",
+                  "title",
+                  "duration"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Đề thi đã được tạo thành công"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Tải lên đề thi từ file Word (.docx)",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
+    "/exams": {
+      "get": {
+        "operationId": "ExamController_getAllExams",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Danh sách đề thi"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lấy tất cả danh sách đề thi",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
+    "/exams/history": {
+      "get": {
+        "operationId": "ExamController_getMyHistory",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lịch sử làm bài"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Xem lịch sử làm bài của bản thân",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
+    "/exams/{id}": {
+      "get": {
+        "operationId": "ExamController_getExamById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Thông tin đề thi và câu hỏi"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lấy chi tiết đề thi",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
+    "/exams/{id}/submit": {
+      "post": {
+        "operationId": "ExamController_submitExam",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      0,
+                      1,
+                      2,
+                      0
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Kết quả bài thi"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Nộp bài thi và tính điểm",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
+    "/exams/debug/latest": {
+      "get": {
+        "operationId": "ExamController_debugLatestExam",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Debug: Check latest exam data",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UserController_getAllUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Danh sách người dùng"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lấy danh sách người dùng và số lượt thi (Admin only)",
+        "tags": [
+          "Quản lý Người dùng (Admin)"
+        ]
+      }
+    },
+    "/users/{id}/history": {
+      "get": {
+        "operationId": "UserController_getUserHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lịch sử thi của user"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Xem lịch sử thi của một user cụ thể (Admin only)",
+        "tags": [
+          "Quản lý Người dùng (Admin)"
+        ]
+      }
+    },
+    "/users/profile": {
+      "patch": {
+        "operationId": "UserController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cập nhật thành công"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cập nhật thông tin cá nhân",
+        "tags": [
+          "Quản lý Người dùng (Admin)"
+        ]
+      }
+    },
+    "/users/password": {
+      "patch": {
+        "operationId": "UserController_changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đổi mật khẩu thành công"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Đổi mật khẩu",
+        "tags": [
+          "Quản lý Người dùng (Admin)"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Ứng dụng Luyện Thi Toán - API",
+    "description": "Tài liệu API cho hệ thống luyện thi toán trực tuyến",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Địa chỉ email của người dùng",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Mật khẩu người dùng (tối thiểu 6 ký tự)",
+            "example": "password123",
+            "minLength": 6
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Họ và tên đầy đủ của người dùng",
+            "example": "Nguyễn Văn A"
+          },
+          "className": {
+            "type": "string",
+            "description": "Lớp học của người dùng (Tùy chọn)",
+            "example": "Lớp 12A1"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "fullName"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Địa chỉ email đăng nhập",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Mật khẩu đăng nhập",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Nguyen Van A"
+          },
+          "role": {
+            "type": "string",
+            "example": "USER",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "fullName",
+          "role"
+        ]
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "description": "Họ và tên đầy đủ",
+            "example": "Nguyễn Văn A"
+          },
+          "className": {
+            "type": "string",
+            "description": "Lớp học",
+            "example": "Lớp 12A1"
+          },
+          "role": {
+            "type": "string",
+            "description": "Vai trò người dùng",
+            "example": "USER",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ]
+          }
+        }
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "description": "Mật khẩu hiện tại",
+            "example": "oldpassword123"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "Mật khẩu mới (tối thiểu 6 ký tự)",
+            "example": "newpassword123",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "oldPassword",
+          "newPassword"
+        ]
+      }
+    }
+  }
+}

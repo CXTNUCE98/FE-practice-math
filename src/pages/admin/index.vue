@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUploadExamMutation } from '~/composables/useExamMutation';
+import { useUploadExamMutation, useDeleteExamMutation } from '~/composables/useExamMutation';
 import { useExamsQuery } from '~/composables/useExamQuery';
 
 definePageMeta({
@@ -8,6 +8,33 @@ definePageMeta({
 
 const { data: exams, refetch: refetchExams } = useExamsQuery();
 const { mutate: uploadExam, isPending, error, isSuccess } = useUploadExamMutation();
+const { mutate: deleteExam, isPending: isDeleting } = useDeleteExamMutation();
+
+const handleDeleteExam = (id: string, title: string) => {
+  ElMessageBox.confirm(
+    `Bạn có chắc chắn muốn xóa đề thi: "${title}" không?`,
+    'Xác nhận xóa',
+    {
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      deleteExam(id, {
+        onSuccess: () => {
+          ElMessage.success('Xóa đề thi thành công!');
+          refetchExams();
+        },
+        onError: (err: any) => {
+          ElMessage.error(err?.data?.message || 'Xóa đề thi thất bại');
+        }
+      });
+    })
+    .catch(() => {
+      // User canceled deletion
+    });
+};
 
 const examData = reactive({
   title: '',
@@ -193,8 +220,13 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'results'
                       {{ new Date(exam.createdAt).toLocaleDateString('vi-VN') }}
                     </td>
                     <td class="px-6 py-4">
-                      <button class="p-2 text-slate-400 hover:text-red-500 transition-all">
-                        <i class="bx bx-trash text-xl"></i>
+                      <button 
+                        @click="handleDeleteExam(exam.id, exam.title)"
+                        class="p-2 text-slate-400 hover:text-red-500 transition-all"
+                        :disabled="isDeleting"
+                      >
+                        <i v-if="isDeleting" class="bx bx-loader-alt animate-spin text-xl"></i>
+                        <i v-else class="bx bx-trash text-xl"></i>
                       </button>
                     </td>
                   </tr>

@@ -15,9 +15,10 @@ export const useSubmitExamMutation = () => {
       examId: string;
       answers: number[];
     }): Promise<any> => {
-      return await $practiceMathApi(`/exams/${examId}/submit`, {
+      return await $practiceMathApi("/exams/{id}/submit", {
         method: "POST",
         headers: getAuthHeaders(),
+        path: { id: examId },
         body: { answers },
       });
     },
@@ -36,12 +37,37 @@ export const useUploadExamMutation = () => {
 
   return useMutation({
     mutationFn: async (formData: FormData): Promise<any> => {
-      return await $practiceMathApi("/exams/upload", {
+      // NOTE: Bypass nuxt-api-party proxy for FormData to ensure
+      // correct multipart/form-data handling with all fields (title, duration, file)
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBase;
+
+      return await $fetch(`${apiBase}/exams/upload`, {
         method: "POST",
         headers: {
           ...getAuthHeaders(),
         },
         body: formData,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["exams"] });
+    },
+  });
+};
+
+/**
+ * Mutation xử lý xóa đề thi (Dành cho Admin)
+ */
+export const useDeleteExamMutation = () => {
+  const { getAuthHeaders } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string): Promise<any> => {
+      return await $practiceMathApi(`/exams/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
       });
     },
     onSuccess: () => {
