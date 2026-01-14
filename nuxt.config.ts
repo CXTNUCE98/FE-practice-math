@@ -44,7 +44,7 @@ export default defineNuxtConfig({
   apiParty: {
     endpoints: {
       practiceMathApi: {
-        url: "http://localhost:3001",
+        url: "https://be-practice-math.vercel.app/api",
         schema: resolve("./src/schemas/practiceMathApi.json"),
       },
     },

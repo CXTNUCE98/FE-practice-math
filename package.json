@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "openapi:practice-math": "tsx ./s-openapi.ts http://localhost:3001/api-docs-json ./src/schemas/practiceMathApi.json"
+    "openapi:practice-math": "tsx ./s-openapi.ts https://be-practice-math.vercel.app/api-docs-json ./src/schemas/practiceMathApi.json"
   },
   "dependencies": {
     "@iconify-json/carbon": "^1.2.16",

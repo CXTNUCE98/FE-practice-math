@@ -220,6 +220,33 @@
         "tags": [
           "Quản lý Đề thi (Exams)"
         ]
+      },
+      "delete": {
+        "operationId": "ExamController_deleteExam",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Đề thi đã được xóa"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Xóa đề thi",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
       }
     },
     "/exams/{id}/submit": {
