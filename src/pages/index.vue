@@ -31,129 +31,185 @@ const features = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans selection:bg-slate-900 selection:text-white dark:selection:bg-white dark:selection:text-slate-900">
-    <!-- Hero -->
-    <section class="pt-32 pb-20 md:pt-48 md:pb-32 px-4 border-b border-slate-50 dark:border-slate-900">
-      <div class="max-w-7xl mx-auto">
-        <div class="max-w-3xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-8 animate-fade-in">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-            Version 2.0 đã ra mắt
-          </div>
-          <h1 class="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white tracking-tight leading-[1.1] mb-8 animate-slide-up">
-            Nền tảng luyện thi <span class="text-blue-600">Toán học</span> hiện đại.
-          </h1>
-          <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed mb-10 max-w-2xl animate-slide-up delay-100">
-            Học tập hiệu quả hơn với hệ thống đề thi thông minh, giao diện tối giản và trải nghiệm làm bài mượt mà nhất.
-          </p>
-          
-          <div class="flex flex-col sm:flex-row gap-4 animate-slide-up delay-200">
-            <NuxtLink to="#exams" class="btn-primary flex items-center justify-center gap-2">
-              Bắt đầu luyện tập
-              <i class="bx bx-right-arrow-alt text-xl"></i>
-            </NuxtLink>
-            <NuxtLink to="/register" class="btn-secondary flex items-center justify-center gap-2">
-              Tìm hiểu thêm
-            </NuxtLink>
-          </div>
-        </div>
+  <div
+    class="min-h-screen bg-white dark:bg-slate-950 font-sans selection:bg-blue-600 selection:text-white overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div
+      class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-400/10 blur-[120px] -z-10 rounded-full animate-float">
+    </div>
+    <div
+      class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-400/10 blur-[120px] -z-10 rounded-full animate-float-slow">
+    </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mt-20 pt-12 border-t border-slate-100 dark:border-slate-900 animate-fade-in delay-300">
-          <div v-for="stat in stats" :key="stat.label">
-            <div class="text-2xl font-bold text-slate-900 dark:text-white">{{ stat.value }}</div>
-            <div class="text-sm font-medium text-slate-400">{{ stat.label }}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="py-24 px-4 bg-slate-50/50 dark:bg-slate-900/20">
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 md:pt-56 md:pb-40 px-4 overflow-hidden">
       <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div v-for="f in features" :key="f.title" class="space-y-4">
-            <div class="w-10 h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center text-blue-600">
-              <i :class="f.icon" class="text-xl"></i>
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          <div class="flex-1 text-center lg:text-left">
+            <div
+              class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 text-xs font-bold text-blue-600 dark:text-blue-400 mb-8 animate-fade-in-down">
+              <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+              Version 3.0: Trải nghiệm học tập vượt trội
             </div>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ f.title }}</h3>
-            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{{ f.desc }}</p>
+            <h1
+              class="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.05] mb-8 font-heading animate-fade-in-up">
+              Làm chủ <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Toán
+                học</span><br />
+              theo cách mới.
+            </h1>
+            <p
+              class="text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed mb-12 max-w-2xl mx-auto lg:mx-0 font-medium animate-fade-in-up-delay">
+              Nền tảng luyện thi thông minh nhất với kho đề thi khổng lồ, giải thích chi tiết và hệ thống theo dõi tiến
+              độ học tập cá nhân hóa.
+            </p>
+
+            <div
+              class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up-delay">
+              <NuxtLink to="#exams" class="btn-primary !px-8 !py-4 text-base shadow-blue-600/20">
+                Bắt đầu học ngay
+                <i class="bx bx-run text-xl"></i>
+              </NuxtLink>
+              <NuxtLink to="/register" class="btn-secondary !px-8 !py-4 text-base">
+                Khám phá tính năng
+                <i class="bx bx-compass text-xl"></i>
+              </NuxtLink>
+            </div>
+
+            <!-- Enhanced Stats -->
+            <div
+              class="grid grid-cols-3 gap-8 md:gap-12 mt-20 pt-10 border-t border-slate-100 dark:border-slate-900 animate-fade-in-up-delay">
+              <div v-for="stat in stats" :key="stat.label">
+                <div class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white font-heading mb-1">{{
+                  stat.value }}</div>
+                <div class="text-[xs] md:text-sm font-bold text-slate-400 uppercase tracking-widest">{{ stat.label }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Illustration/Image Placeholder -->
+          <div class="flex-1 hidden lg:block animate-float">
+            <div class="relative w-full aspect-square max-w-lg mx-auto">
+              <!-- Decorative circles -->
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-indigo-600/20 rounded-full blur-3xl">
+              </div>
+              <div
+                class="glass-card w-full h-full rounded-[40px] flex items-center justify-center p-12 overflow-hidden border-2 border-white/40 dark:border-slate-700/40 relative z-10">
+                <div class="grid grid-cols-2 gap-6 w-full h-full">
+                  <div
+                    class="bg-blue-600 rounded-3xl p-6 flex flex-col justify-end text-white hover:scale-105 transition-transform duration-500 cursor-default">
+                    <i class="bx bx-calculator text-4xl mb-4"></i>
+                    <p class="font-bold text-lg">Hơn 500+ bài giảng</p>
+                  </div>
+                  <div
+                    class="bg-indigo-600 rounded-3xl p-6 flex flex-col justify-end text-white translate-y-8 hover:scale-105 transition-transform duration-500 cursor-default">
+                    <i class="bx bx-user-voice text-4xl mb-4"></i>
+                    <p class="font-bold text-lg">Giáo viên hỗ trợ 24/7</p>
+                  </div>
+                  <div
+                    class="bg-slate-900 dark:bg-blue-400 rounded-3xl p-6 flex flex-col justify-end text-white dark:text-slate-900 hover:scale-105 transition-transform duration-500 cursor-default">
+                    <i class="bx bx-trophy text-4xl mb-4"></i>
+                    <p class="font-bold text-lg">95% học sinh hài lòng</p>
+                  </div>
+                  <div
+                    class="bg-emerald-500 rounded-3xl p-6 flex flex-col justify-end text-white translate-y-8 hover:scale-105 transition-transform duration-500 cursor-default">
+                    <i class="bx bx-check-shield text-4xl mb-4"></i>
+                    <p class="font-bold text-lg">Bản quyền độc quyền</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Exams List -->
-    <section id="exams" class="py-24 px-4">
+    <!-- Features Section -->
+    <section class="py-32 px-4 relative">
       <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <h2 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Đề thi mới nhất</h2>
-            <p class="text-slate-500 dark:text-slate-400">Danh sách các đề thi được cập nhật thường xuyên</p>
+        <div class="text-center mb-20">
+          <h2 class="section-title mb-4">Tại sao chọn MathPractice?</h2>
+          <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">Chúng tôi mang đến giải pháp học
+            trực tuyến toàn diện, tối ưu hóa thời gian và hiệu quả cho học sinh Việt Nam.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div v-for="f in features" :key="f.title"
+            class="group p-10 rounded-3xl transition-all duration-500 hover:bg-white dark:hover:bg-slate-900 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-slate-800/10 border border-transparent hover:border-slate-100 dark:hover:border-slate-800">
+            <div
+              class="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex-center text-blue-600 dark:text-blue-400 mb-8 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+              <i :class="f.icon" class="text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-heading">{{ f.title }}</h3>
+            <p class="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{{ f.desc }}</p>
           </div>
-          <div class="flex items-center gap-2 p-1 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800">
-            <button class="px-4 py-1.5 text-sm font-semibold rounded-md bg-white dark:bg-slate-800 shadow-sm text-slate-900 dark:text-white">Tất cả</button>
-            <button class="px-4 py-1.5 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Yêu thích</button>
-          </div>
-        </div>
-
-        <!-- Loading -->
-        <div v-if="isPending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="i in 6" :key="i" class="h-64 rounded-xl bg-slate-50 dark:bg-slate-900 animate-pulse border border-slate-100 dark:border-slate-800"></div>
-        </div>
-
-        <!-- Error -->
-        <div v-else-if="error" class="card py-16 text-center text-slate-500 border-dashed border-2">
-          <i class="bx bx-error-circle text-4xl mb-4 text-red-400"></i>
-          <p>Không thể tải danh sách đề thi. Vui lòng thử lại sau.</p>
-        </div>
-
-        <!-- Empty -->
-        <div v-else-if="!exams?.length" class="card py-20 text-center text-slate-400 border-dashed border-2">
-          <i class="bx bx-folder-open text-5xl mb-4 opacity-50"></i>
-          <p>Chưa có đề thi nào trong danh sách.</p>
-        </div>
-
-        <!-- List -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <ExamCard v-for="exam in exams" :key="exam.id" :exam="exam" />
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-12 border-t border-slate-100 dark:border-slate-900 px-4">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-bold">M</div>
-          <span class="font-bold text-slate-900 dark:text-white">MathPractice</span>
+    <!-- Exams List Section -->
+    <section id="exams" class="py-32 px-4 bg-slate-50/50 dark:bg-slate-900/30">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-2">
+          <div class="max-w-xl">
+            <div class="flex items-center gap-2 text-blue-600 font-bold text-sm uppercase tracking-widest mb-3">
+              <i class="bx bx-hot"></i>
+              Nổi bật hàng tuần
+            </div>
+            <h2 class="text-4xl font-bold text-slate-900 dark:text-white tracking-tight font-heading">Đề thi mới nhất
+            </h2>
+          </div>
+
+          <div
+            class="flex items-center gap-2 p-1.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            <button class="px-6 py-2 text-sm font-bold rounded-xl transition-all"
+              :class="'bg-slate-900 text-white shadow-xl shadow-slate-900/10'">Mới nhất</button>
+            <button
+              class="px-6 py-2 text-sm font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors">Xem
+              nhiều</button>
+          </div>
         </div>
-        <div class="flex gap-8 text-sm font-medium text-slate-400">
-          <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Điều khoản</a>
-          <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Bảo mật</a>
-          <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Liên hệ</a>
+
+        <!-- States -->
+        <div v-if="isPending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div v-for="i in 6" :key="i"
+            class="h-80 rounded-2xl bg-white dark:bg-slate-800 animate-pulse border border-slate-100 dark:border-slate-700/50">
+          </div>
         </div>
-        <div class="text-sm text-slate-400">
-          © 2026 MathPractice. All rights reserved.
+
+        <div v-else-if="error" class="card py-20 text-center max-w-2xl mx-auto border-dashed border-2">
+          <div class="w-20 h-20 rounded-full bg-red-50 dark:bg-red-500/10 flex-center mx-auto mb-6">
+            <i class="bx bx-error-circle text-4xl text-red-500"></i>
+          </div>
+          <p class="text-slate-900 dark:text-white font-bold text-lg mb-2">Đã xảy ra lỗi</p>
+          <p class="text-slate-500 dark:text-slate-400 mb-8">Không thể tải danh sách đề thi. Vui lòng kiểm tra lại kết
+            nối.</p>
+          <button @click="() => { }" class="btn-primary !px-6 !py-2.5 mx-auto">Thử lại</button>
+        </div>
+
+        <div v-else-if="!exams?.length" class="card py-24 text-center max-w-2xl mx-auto border-dashed border-2">
+          <div class="w-20 h-20 rounded-full bg-slate-50 dark:bg-slate-800 flex-center mx-auto mb-6">
+            <i class="bx bx-folder-open text-4xl text-slate-300"></i>
+          </div>
+          <p class="text-slate-500 dark:text-slate-400 font-bold">Chưa có đề thi nào trong hệ thống.</p>
+        </div>
+
+        <!-- Main List -->
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 px-2">
+          <ExamCard v-for="exam in exams" :key="exam.id" :exam="exam" class="animate-fade-in-up" />
+        </div>
+
+        <div class="mt-20 text-center">
+          <NuxtLink to="/exams" class="btn-secondary !inline-flex !px-10 !py-4 text-base font-bold shadow-sm">
+            Xem toàn bộ kho đề thi
+            <i class="bx bx-chevron-right text-xl"></i>
+          </NuxtLink>
         </div>
       </div>
-    </footer>
+    </section>
   </div>
 </template>
 
 <style scoped>
-.animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
-.animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* Custom animations if needed beyond UnoCSS */
 </style>

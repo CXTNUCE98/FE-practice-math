@@ -80,135 +80,256 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-900 pb-20">
+  <div class="min-h-screen bg-white dark:bg-slate-950 pb-20 selection:bg-blue-600 selection:text-white">
+    <!-- Decorative Background -->
+    <div class="fixed top-0 right-0 w-[400px] h-[400px] bg-blue-400/5 blur-[100px] -z-10 rounded-full"></div>
+    <div class="fixed bottom-0 left-0 w-[400px] h-[400px] bg-purple-400/5 blur-[100px] -z-10 rounded-full"></div>
+
     <!-- Loading & Error States -->
-    <div v-if="isPending" class="flex flex-col items-center justify-center min-h-[60vh]">
-      <div class="animate-spin text-5xl text-sky-500 mb-4">
-        <i class="bx bx-loader-alt"></i>
-      </div>
-      <p class="text-slate-600 dark:text-slate-400">Đang tải đề thi...</p>
+    <div v-if="isPending" class="flex flex-col items-center justify-center min-h-[80vh] animate-fade-in">
+      <div class="w-16 h-16 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin mb-6"></div>
+      <p class="text-slate-500 dark:text-slate-400 font-bold tracking-widest uppercase text-xs">Đang chuẩn bị đề thi...
+      </p>
     </div>
 
-    <div v-else-if="error" class="max-w-xl mx-auto mt-20 p-8 card text-center">
-      <i class="bx bx-error-circle text-5xl text-red-500 mb-4"></i>
-      <h2 class="text-xl font-bold mb-2">Không thể tải đề thi</h2>
-      <p class="text-slate-600 mb-6">Vui lòng kiểm tra lại kết nối hoặc thử lại sau.</p>
-      <NuxtLink to="/" class="btn-primary inline-block">Quay lại trang chủ</NuxtLink>
+    <div v-else-if="error"
+      class="max-w-xl mx-auto mt-32 p-10 card text-center border-dashed border-2 animate-fade-in-up">
+      <div class="w-20 h-20 rounded-full bg-red-50 dark:bg-red-500/10 flex-center mx-auto mb-6">
+        <i class="bx bx-error-circle text-4xl text-red-500"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2 font-heading">Không thể tải đề thi</h2>
+      <p class="text-slate-500 dark:text-slate-400 mb-8 font-medium">Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau
+        ít phút.</p>
+      <NuxtLink to="/" class="btn-primary !inline-flex !px-8">Quay lại trang chủ</NuxtLink>
     </div>
 
     <!-- Result View -->
-    <div v-else-if="isSubmitted" class="max-w-2xl mx-auto mt-20 p-8 card text-center animate-fade-in-top">
-      <div
-        class="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto text-4xl mb-6">
-        <i class="bx bx-trophy"></i>
-      </div>
-      <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Hoàn thành bài thi!</h2>
-      <p class="text-slate-600 dark:text-slate-400 mb-8">Kết quả của bạn đã được ghi lại.</p>
+    <div v-else-if="isSubmitted" class="max-w-3xl mx-auto mt-24 px-4 pb-20 animate-fade-in-up">
+      <div class="glass-card p-10 md:p-16 text-center shadow-2xl relative overflow-hidden">
+        <!-- Floating shapes -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
 
-      <div class="grid grid-cols-2 gap-4 mb-8">
-        <div class="p-6 bg-slate-50 dark:bg-slate-700/50 rounded-2xl">
-          <p class="text-sm text-slate-500 mb-1">Điểm số</p>
-          <p class="text-4xl font-black text-sky-600 dark:text-sky-400">{{ result?.score?.toFixed(1) }}</p>
-        </div>
-        <div class="p-6 bg-slate-50 dark:bg-slate-700/50 rounded-2xl">
-          <p class="text-sm text-slate-500 mb-1">Thời gian nộp</p>
-          <p class="text-lg font-bold">{{ new Date().toLocaleTimeString('vi-VN') }}</p>
-        </div>
-      </div>
+        <div class="relative z-10">
+          <div
+            class="w-24 h-24 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto text-5xl mb-8 shadow-xl shadow-emerald-500/20 rotate-3">
+            <i class="bx bx-trophy"></i>
+          </div>
+          <h2 class="text-4xl font-black text-slate-900 dark:text-white mb-3 font-heading tracking-tight">Hoàn thành bài
+            thi!</h2>
+          <p class="text-slate-500 dark:text-slate-400 font-medium mb-12">Chúc mừng bạn đã hoàn thành bài thi. Dưới đây
+            là kết quả chi tiết.</p>
 
-      <div class="flex gap-4">
-        <NuxtLink to="/" class="flex-1 btn-primary">Về trang chủ</NuxtLink>
-        <button @click="isSubmitted = false"
-          class="flex-1 px-6 py-3 rounded-full border border-slate-200 dark:border-slate-700 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-          Xem lại bài
-        </button>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <div
+              class="p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 flex flex-col items-center justify-center hover:scale-[1.02] transition-transform">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Điểm số của bạn</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-6xl font-black text-blue-600 dark:text-blue-400 font-heading leading-none">{{
+                  result?.score?.toFixed(1) }}</span>
+                <span class="text-slate-400 font-bold text-xl">/10</span>
+              </div>
+            </div>
+            <div
+              class="p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 lg:col-span-1 flex flex-col items-center justify-center hover:scale-[1.02] transition-transform">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Thông tin nộp
+                bài</span>
+              <div class="space-y-2 text-center">
+                <p class="text-lg font-bold text-slate-900 dark:text-white">{{ new Date().toLocaleTimeString('vi-VN') }}
+                </p>
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">{{ new
+                  Date().toLocaleDateString('vi-VN') }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button @click="isSubmitted = false" class="btn-secondary !px-10 !py-4 font-bold order-2 sm:order-1">
+              <i class="bx bx-show text-xl"></i>
+              Xem lại bài làm
+            </button>
+            <NuxtLink to="/" class="btn-primary !px-10 !py-4 font-bold order-1 sm:order-2 shadow-blue-600/20">
+              Về trang chủ
+              <i class="bx bx-home-alt text-xl"></i>
+            </NuxtLink>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Exam Content -->
-    <div v-else-if="exam" class="max-w-7xl mx-auto px-4 py-8">
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div v-else-if="exam" class="max-w-[1400px] mx-auto px-4 py-12 lg:py-20 animate-fade-in">
+      <!-- Header Info -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 px-2">
+        <div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white font-heading tracking-tight mb-2 uppercase">{{
+            exam.title }}</h1>
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5 text-slate-500 font-bold text-sm">
+              <i class="bx bx-list-ol text-blue-500"></i> {{ exam.questions?.length }} Câu hỏi
+            </span>
+            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+            <span class="flex items-center gap-1.5 text-slate-500 font-bold text-sm">
+              <i class="bx bx-time-five text-blue-500"></i> {{ exam.duration }} Phút
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button @click="handleSubmit"
+            class="btn-primary !px-10 !py-4 !text-base shadow-emerald-500/20 !bg-emerald-600 !hover:bg-emerald-700">
+            Nộp bài ngay
+            <i class="bx bx-send text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
         <!-- Main Question Area -->
-        <div class="lg:col-span-3 space-y-6">
-          <div class="card p-8">
-            <div class="flex items-center justify-between mb-8 border-b border-slate-100 dark:border-slate-700 pb-4">
-              <h2 class="text-lg font-bold text-slate-500 uppercase tracking-wider">
-                Câu hỏi {{ currentQuestionIndex + 1 }}
-              </h2>
-              <div class="flex gap-2">
+        <div class="lg:col-span-8 space-y-8">
+          <div class="card p-8 md:p-12 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -translate-y-16 translate-x-16">
+            </div>
+
+            <div
+              class="flex items-center justify-between mb-12 border-b border-slate-100 dark:border-slate-800/60 pb-8">
+              <div class="space-y-1">
+                <span class="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.3em]">Đang
+                  làm câu</span>
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white font-heading tracking-tighter">
+                  #{{ (currentQuestionIndex + 1).toString().padStart(2, '0') }}
+                </h2>
+              </div>
+              <div class="flex gap-3">
                 <button @click="currentQuestionIndex = Math.max(0, currentQuestionIndex - 1)"
-                  class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"
+                  class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed group"
                   :disabled="currentQuestionIndex === 0">
-                  <i class="bx bx-chevron-left text-2xl"></i>
+                  <i
+                    class="bx bx-chevron-left text-2xl text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white"></i>
                 </button>
                 <button
                   @click="currentQuestionIndex = Math.min((exam.questions?.length || 1) - 1, currentQuestionIndex + 1)"
-                  class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"
+                  class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed group"
                   :disabled="currentQuestionIndex === (exam.questions?.length || 1) - 1">
-                  <i class="bx bx-chevron-right text-2xl"></i>
+                  <i
+                    class="bx bx-chevron-right text-2xl text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white"></i>
                 </button>
               </div>
             </div>
 
-            <div v-if="currentQuestion" class="space-y-8">
-              <MathRenderer :content="currentQuestion.content" block
-                class="text-xl leading-relaxed text-slate-900 dark:text-white" />
+            <div v-if="currentQuestion" class="space-y-12 animate-fade-in">
+              <div
+                class="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+                <MathRenderer :content="currentQuestion.content" block
+                  class="text-xl md:text-2xl leading-[1.6] text-slate-900 dark:text-white font-medium" />
+              </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 gap-4">
                 <button v-for="(option, idx) in currentQuestion.options" :key="idx"
                   @click="handleSelectAnswer(currentQuestionIndex, idx)"
-                  class="flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left group" :class="[
+                  class="flex items-center gap-6 p-6 rounded-3xl border-2 transition-all text-left relative overflow-hidden group/opt"
+                  :class="[
                     userAnswers[currentQuestionIndex] === idx
-                      ? 'border-sky-500 bg-sky-50 dark:bg-sky-900/20'
-                      : 'border-slate-100 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-700'
+                      ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-500/10 shadow-lg shadow-blue-600/5'
+                      : 'border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 bg-white dark:bg-slate-900'
                   ]">
+                  <div class="absolute inset-0 bg-blue-600 opacity-0 group-hover/opt:opacity-[0.02] transition-opacity">
+                  </div>
+
                   <span
-                    class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl font-bold transition-all text-lg"
+                    class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-2xl font-black transition-all text-xl font-heading shadow-sm"
                     :class="[
                       userAnswers[currentQuestionIndex] === idx
-                        ? 'bg-sky-500 text-white'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-sky-100 dark:group-hover:bg-sky-900/30 group-hover:text-sky-600'
+                        ? 'bg-blue-600 text-white scale-110 rotate-3'
+                        : 'bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover/opt:scale-110 group-hover/opt:bg-blue-100 dark:group-hover/opt:bg-blue-900/30 group-hover/opt:text-blue-600'
                     ]">
                     {{ String.fromCharCode(65 + idx) }}
                   </span>
-                  <MathRenderer :content="option" class="font-medium text-slate-700 dark:text-slate-300" />
+                  <MathRenderer :content="option" class="font-bold text-slate-700 dark:text-slate-200 text-lg" />
                 </button>
               </div>
             </div>
+          </div>
+
+          <div class="flex justify-between items-center px-4">
+            <button @click="currentQuestionIndex = Math.max(0, currentQuestionIndex - 1)"
+              class="flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold transition-colors disabled:opacity-0"
+              :disabled="currentQuestionIndex === 0">
+              <i class="bx bx-left-arrow-alt text-2xl"></i>
+              Câu trước
+            </button>
+            <button
+              @click="currentQuestionIndex = Math.min((exam.questions?.length || 1) - 1, currentQuestionIndex + 1)"
+              class="flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold transition-colors disabled:opacity-0"
+              :disabled="currentQuestionIndex === (exam.questions?.length || 1) - 1">
+              Câu sau
+              <i class="bx bx-right-arrow-alt text-2xl"></i>
+            </button>
           </div>
         </div>
 
         <!-- Sidebar / Navigation -->
-        <div class="lg:col-span-1 space-y-6">
+        <div class="lg:col-span-4 space-y-8">
           <!-- Timer Card -->
-          <div class="card p-6 border-sky-200 dark:border-sky-900 text-center sticky top-24">
-            <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2">Thời gian còn lại</p>
-            <p class="text-4xl font-black font-mono tracking-tighter text-sky-600 dark:text-sky-400 mb-6">
+          <div class="glass-card p-10 text-center sticky top-28 shadow-xl border-blue-500/20">
+            <div class="absolute top-0 right-0 p-3">
+              <div class="w-2 h-2 rounded-full bg-red-600 animate-ping"></div>
+            </div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Thời gian làm bài</p>
+            <div
+              class="text-6xl font-black font-mono tracking-tighter text-slate-900 dark:text-white mb-8 bg-slate-50 dark:bg-slate-900/50 py-6 rounded-3xl border border-slate-100 dark:border-slate-800 tabular-nums">
               {{ formatTime(timeLeft) }}
-            </p>
+            </div>
 
-            <button @click="handleSubmit" :disabled="isSubmitting" class="btn-primary w-full py-4 text-lg">
-              {{ isSubmitting ? 'Đang nộp bài...' : 'Nộp bài thi' }}
-            </button>
+            <div class="space-y-4">
+              <div class="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-widest px-2">
+                <span>Tiến độ</span>
+                <span>{{userAnswers.filter(a => a !== -1).length}}/{{ exam.questions?.length }} Câu</span>
+              </div>
+              <div
+                class="h-3 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden p-1 border border-slate-200/50 dark:border-slate-800/50">
+                <div
+                  class="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-1000"
+                  :style="{ width: `${(userAnswers.filter(a => a !== -1).length / (exam.questions?.length || 1)) * 100}%` }">
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Question Grid -->
-          <div class="card p-6">
-            <h3 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <i class="bx bx-grid-alt"></i>
-              Phiếu trả lời
+          <div class="card p-8 group">
+            <h3
+              class="font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3 font-heading uppercase tracking-tight">
+              <div
+                class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600">
+                <i class="bx bx-grid-alt"></i>
+              </div>
+              Bản đồ câu hỏi
             </h3>
-            <div class="grid grid-cols-5 gap-2">
+            <div class="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-5 gap-3">
               <button v-for="(ans, idx) in userAnswers" :key="idx" @click="currentQuestionIndex = idx"
-                class="w-full aspect-square flex items-center justify-center text-xs font-bold rounded-lg transition-all border"
+                class="aspect-square flex items-center justify-center text-sm font-black rounded-xl transition-all border-2 relative group/item"
                 :class="[
-                  currentQuestionIndex === idx ? 'ring-2 ring-sky-500 ring-offset-2 dark:ring-offset-slate-900' : '',
+                  currentQuestionIndex === idx ? 'border-blue-600 dark:border-blue-500' : 'border-transparent',
                   ans !== -1
-                    ? 'bg-sky-500 text-white border-transparent'
-                    : 'bg-white dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700 hover:border-sky-300'
+                    ? (currentQuestionIndex === idx ? 'bg-blue-600 text-white' : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 border-blue-100 dark:border-blue-500/20')
+                    : 'bg-slate-50 dark:bg-slate-900/50 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                 ]">
                 {{ idx + 1 }}
+                <div v-if="ans !== -1"
+                  class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900">
+                </div>
               </button>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800/60 grid grid-cols-2 gap-4">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đã chọn</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Trống</span>
+              </div>
             </div>
           </div>
         </div>

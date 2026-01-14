@@ -38,6 +38,7 @@ export interface Exam {
   duration: number; // Phút
   createdAt: string;
   questions?: Question[];
+  questionCount?: number;
 }
 
 /**

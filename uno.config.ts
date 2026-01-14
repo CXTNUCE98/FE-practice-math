@@ -163,39 +163,39 @@ export const unoConfig: UserConfig = {
     ],
     [
       "btn-primary",
-      "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]",
+      "bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-100 dark:to-slate-200 text-white dark:text-slate-900 px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-slate-900/5 dark:shadow-slate-100/5 hover:shadow-xl hover:shadow-slate-900/10 dark:hover:shadow-slate-100/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97] flex-center gap-2",
     ],
     [
       "btn-secondary",
-      "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 px-6 py-2.5 rounded-lg font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 active:scale-[0.98]",
+      "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 px-6 py-2.5 rounded-xl font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 active:scale-[0.97] flex-center gap-2",
     ],
     [
       "btn-outline",
-      "border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 px-6 py-2.5 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 active:scale-[0.98]",
+      "border-2 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 px-6 py-2.5 rounded-xl font-semibold hover:bg-slate-50 dark:hover:bg-slate-900 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all duration-300 active:scale-[0.97] flex-center gap-2",
     ],
     [
       "card",
-      "bg-white dark:bg-slate-900 rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05),0_1px_2px_0_rgba(0,0,0,0.06)] p-6 border border-slate-100 dark:border-slate-800",
+      "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] p-6 border border-slate-200/50 dark:border-slate-800/50",
     ],
     [
       "card-interactive",
-      "bg-white dark:bg-slate-900 rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05),0_1px_2px_0_rgba(0,0,0,0.06)] p-6 border border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 cursor-pointer",
+      "card hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_20px_40px_rgb(0,0,0,0.3)] transition-all duration-500 cursor-pointer",
     ],
     [
       "gradient-border",
-      "relative before:absolute before:inset-0 before:rounded-xl before:p-[1px] before:bg-slate-200 before:dark:bg-slate-700 before:-z-10",
+      "relative before:absolute before:inset-0 before:rounded-2xl before:p-[1px] before:bg-gradient-to-r before:from-blue-500 before:to-purple-500 before:opacity-20 before:-z-10",
     ],
     [
       "section-title",
-      "text-2xl font-bold text-slate-900 dark:text-white mb-8 tracking-tight",
+      "text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-8 tracking-tight font-heading",
     ],
     [
       "input-field",
-      "w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-900 dark:focus:ring-white focus:border-transparent outline-none transition-all placeholder:text-slate-400",
+      "w-full px-4 py-3 border-2 border-slate-100 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 outline-none transition-all duration-300 placeholder:text-slate-400",
     ],
     [
       "glass-card",
-      "backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-700/50 shadow-sm rounded-xl",
+      "backdrop-blur-2xl bg-white/40 dark:bg-slate-950/40 border border-white/20 dark:border-slate-800/40 shadow-2xl rounded-2xl",
     ],
   ],
   presets: [
@@ -213,46 +213,19 @@ export const unoConfig: UserConfig = {
       },
     }),
     presetUno(),
-    // presetWebFonts({
-    //   provider: 'google',
-    //   fonts: {
-    //     sans: {
-    //       name: 'Inter',
-    //       weights: ['200', '300', '400', '500', '600', '700', '800', '900'],
-    //       italic: true,
-    //     },
-    //     jakarta: {
-    //       name: 'Plus Jakarta Sans',
-    //       weights: ['200', '300', '400', '500', '600', '700', '800', '900'],
-    //       italic: true,
-    //     },
-    //     serif: {
-    //       name: 'DM Serif Display',
-    //       weights: ['400'],
-    //       italic: true,
-    //     },
-    //     jost: {
-    //       name: 'Jost',
-    //       weights: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-    //       italic: true,
-    //     },
-    //     playfair: {
-    //       name: 'Playfair Display',
-    //       weights: ['400', '500', '600', '700', '800', '900'],
-    //       italic: true,
-    //     },
-    //     roboto: {
-    //       name: 'Roboto',
-    //       weights: ['100', '300', '400', '500', '700', '900'],
-    //       italic: true,
-    //     },
-    //     opensans: {
-    //       name: 'Open Sans',
-    //       weights: ['300', '400', '500', '600', '700', '800'],
-    //       italic: true,
-    //     },
-    //   },
-    // }),
+    presetWebFonts({
+      provider: "google",
+      fonts: {
+        sans: {
+          name: "Plus Jakarta Sans",
+          weights: ["300", "400", "500", "600", "700", "800"],
+        },
+        heading: {
+          name: "Outfit",
+          weights: ["400", "500", "600", "700", "800", "900"],
+        },
+      },
+    }),
   ],
   safelist: [],
   rules: [

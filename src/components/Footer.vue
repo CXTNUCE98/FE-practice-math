@@ -21,93 +21,80 @@ const galleryImages = [
 </script>
 
 <template>
-    <footer
-        class="bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 relative overflow-hidden border-t border-slate-200 dark:border-slate-800">
-        <div class="container mx-auto px-6 py-12 relative z-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-10 gap-8">
-                <!-- Logo and Contact Info -->
-                <div class="lg:col-span-3">
-                    <div class="mb-6">
-                        <NuxtLink :to="localePath('/')" class="text-3xl font-bold">
-                            <span class="text-black dark:text-white">AN</span><span
-                                class="text-sky-500 dark:text-cyan-400">DAGO</span>
-                        </NuxtLink>
-                    </div>
-
-                    <div class="space-y-4 text-sm">
-                        <div>
-                            <h3 class="font-semibold text-slate-800 dark:text-white mb-2">{{ t('footer.address') }}</h3>
-                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                                53 Phạm Ngọc Mậu, Thanh Khê, Đà Nẵng
-                            </p>
+    <footer class="py-20 border-t border-slate-100 dark:border-slate-900 px-4 bg-slate-50/30 dark:bg-slate-950">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <!-- Branding -->
+                <div class="col-span-1 md:col-span-1">
+                    <NuxtLink to="/" class="flex items-center gap-3 group mb-6">
+                        <div class="w-9 h-9 rounded-lg bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-bold text-lg transition-transform group-hover:scale-110">
+                            M
                         </div>
-
-                        <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
-                            <h3 class="font-semibold text-slate-800 dark:text-white mb-2">{{ t('footer.email') }}</h3>
-                            <a href="mailto:contact.andago@gmail.com"
-                                class="text-sky-600 dark:text-cyan-400 hover:text-sky-800 dark:hover:text-cyan-300 transition-colors">
-                                contact.andago@gmail.com
-                            </a>
-                        </div>
-
-                        <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
-                            <h3 class="font-semibold text-slate-800 dark:text-white mb-2">{{ t('footer.phone') }}</h3>
-                            <a href="tel:0854242357"
-                                class="text-slate-700 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors font-medium">
-                                0854.242.357 (Mr An)
-                            </a>
-                        </div>
+                        <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white font-heading">
+                            Math<span class="text-blue-600">Practice</span>
+                        </span>
+                    </NuxtLink>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xs">
+                        Nền tảng luyện thi Toán học thông minh giúp bạn chinh phục mọi kỳ thi với kho đề thi đa dạng và hệ thống chấm điểm tự động.
+                    </p>
+                    <div class="flex items-center gap-4 mt-8">
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-600 transition-all">
+                            <i class="bx bxl-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-400 transition-all">
+                            <i class="bx bxl-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-pink-600 hover:border-pink-600 transition-all">
+                            <i class="bx bxl-instagram text-xl"></i>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Tour Menu -->
-                <div class="lg:col-span-3">
-                    <div class="space-y-6">
-                        <!-- Tour Nội Bật -->
-                        <div>
-                            <h3 class="font-bold text-slate-800 dark:text-white mb-4 text-lg">{{
-                                t('footer.featuredTours')
-                                }}</h3>
-                            <ul class="space-y-2">
-                                <li v-for="(link, index) in tourLinks.slice(0, 3)" :key="index">
-                                    <NuxtLink :to="link.url"
-                                        class="text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-cyan-400 transition-colors text-sm flex items-center">
-                                        <span class="mr-2">›</span>
-                                        {{ link.title }}
-                                    </NuxtLink>
-                                </li>
-                            </ul>
-                        </div>
+                <!-- Product -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6 opacity-40">Sản phẩm</h3>
+                    <ul class="space-y-4">
+                        <li><NuxtLink to="/" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Đề thi mới nhất</NuxtLink></li>
+                        <li><NuxtLink to="/" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Thi thử THPT QG</NuxtLink></li>
+                        <li><NuxtLink to="/" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Toán lớp 10-12</NuxtLink></li>
+                        <li><NuxtLink to="/" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Ôn thi học sinh giỏi</NuxtLink></li>
+                    </ul>
+                </div>
 
-                        <!-- Thư Viện Ảnh -->
-                        <div>
-                            <h3 class="font-bold text-slate-800 dark:text-white mb-4 text-lg">{{ t('footer.tourGallery')
-                                }}
-                            </h3>
-                            <ul class="space-y-2">
-                                <li v-for="(link, index) in tourLinks.slice(3)" :key="index">
-                                    <NuxtLink :to="link.url"
-                                        class="text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-cyan-400 transition-colors text-sm flex items-center">
-                                        <span class="mr-2">›</span>
-                                        {{ link.title }}
-                                    </NuxtLink>
-                                </li>
-                            </ul>
+                <!-- Support -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6 opacity-40">Hỗ trợ</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Điều khoản dịch vụ</a></li>
+                        <li><a href="#" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">Liên hệ báo lỗi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6 opacity-40">Liên hệ</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i class="bx bx-envelope text-blue-600 text-xl"></i>
+                            <span class="text-sm font-semibold text-slate-500">support@mathpractice.vn</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="bx bx-phone text-blue-600 text-xl"></i>
+                            <span class="text-sm font-semibold text-slate-500">1900 8198</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Gallery -->
-                <div class="lg:col-span-4">
-                    <div class="grid grid-cols-3 gap-2">
-                        <div v-for="(image, index) in galleryImages" :key="index"
-                            class="aspect-square overflow-hidden rounded">
-                            <img :src="image" :alt="`Gallery ${index + 1}`"
-                                class="w-full h-full object-cover hover:scale-110 transition-transform duration-300" />
-                        </div>
-                    </div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-slate-100 dark:border-slate-800/50">
+                <div class="text-sm font-semibold text-slate-400">
+                    © 2026 MathPractice. Đăng ký bản quyền.
                 </div>
-
+                <div class="flex items-center gap-2 text-sm text-slate-400">
+                    Trạng thái hệ thống: <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-emerald-500 font-bold">Hoạt động tốt</span>
+                </div>
             </div>
         </div>
     </footer>
