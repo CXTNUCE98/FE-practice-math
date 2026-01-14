@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useExamsQuery } from '~/composables/useExamQuery';
 
+const localePath = useLocalePath();
 const { data: exams, isPending, error } = useExamsQuery();
 
 // Stats for hero
@@ -200,7 +201,8 @@ const features = [
         </div>
 
         <div class="mt-20 text-center">
-          <NuxtLink to="/exams" class="btn-secondary !inline-flex !px-10 !py-4 text-base font-bold shadow-sm">
+          <NuxtLink :to="localePath('/exams')"
+            class="btn-secondary !inline-flex !px-10 !py-4 text-base font-bold shadow-sm">
             Xem toàn bộ kho đề thi
             <i class="bx bx-chevron-right text-xl"></i>
           </NuxtLink>

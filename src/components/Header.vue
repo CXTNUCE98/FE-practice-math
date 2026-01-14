@@ -33,8 +33,9 @@ const handleScroll = () => {
 }
 
 const menuItems = computed(() => [
-    { name: 'Lịch sử', path: localePath('/history'), auth: true },
-    { name: 'Quản trị', path: localePath('/admin'), role: 'ADMIN' },
+    { name: 'Đề thi', path: localePath('/exams'), icon: 'bx-book-open' },
+    { name: 'Quản trị', path: localePath('/admin'), role: 'ADMIN', icon: 'bx-shield-quarter' },
+    { name: 'Lịch sử', path: localePath('/history'), auth: true, icon: 'bx-history' },
 ].filter(item => {
     if (item.auth && !isAuthenticated.value) return false
     if (item.role && (!user.value || user.value.role !== item.role)) return false
@@ -82,17 +83,19 @@ onBeforeUnmount(() => {
                 </NuxtLink>
 
                 <!-- Nav -->
-                <nav class="hidden md:flex items-center gap-1">
+                <nav class="hidden md:flex items-center gap-2">
                     <NuxtLink v-for="item in menuItems" :key="item.path" :to="item.path"
-                        class="px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 relative group/nav"
+                        class="px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 relative group/nav flex items-center gap-2"
                         :class="[
                             isActive(item.path)
-                                ? 'text-slate-900 dark:text-white bg-slate-100/50 dark:bg-slate-800/50'
+                                ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-500/10'
                                 : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/30'
                         ]">
-                        {{ item.name }}
+                        <i
+                            :class="['bx text-lg transition-transform duration-300 group-hover/nav:scale-110', item.icon]"></i>
+                        <span>{{ item.name }}</span>
                         <div v-if="isActive(item.path)"
-                            class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-600 transition-all duration-300">
+                            class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
                         </div>
                     </NuxtLink>
                 </nav>
@@ -179,11 +182,15 @@ onBeforeUnmount(() => {
             leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100 translate-y-0 scale-100"
             leave-to-class="opacity-0 -translate-y-10 scale-95">
             <div v-if="showMobileMenu" class="md:hidden fixed inset-x-4 top-[84px] p-6 z-[998] glass-card shadow-2xl">
-                <nav class="space-y-2">
+                <nav class="space-y-2.5">
                     <NuxtLink v-for="item in menuItems" :key="item.path" :to="item.path" @click="showMobileMenu = false"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-lg font-bold transition-all"
-                        :class="isActive(item.path) ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800'">
+                        class="flex items-center gap-4 px-5 py-4 rounded-2xl text-base font-bold transition-all border border-transparent"
+                        :class="isActive(item.path)
+                            ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30 border-blue-500'
+                            : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'">
+                        <i :class="['bx text-2xl', item.icon, isActive(item.path) ? 'opacity-100' : 'opacity-50']"></i>
                         {{ item.name }}
+                        <i v-if="isActive(item.path)" class="bx bx-chevron-right ml-auto text-xl opacity-60"></i>
                     </NuxtLink>
                 </nav>
 
