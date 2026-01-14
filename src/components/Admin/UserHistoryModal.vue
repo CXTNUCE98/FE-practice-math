@@ -123,7 +123,7 @@ const getScoreColor = (score: number) => {
                                 {{ item.score >= 8 ? 'Xuất sắc' : item.score >= 5 ? 'Đạt' : 'Cần cố gắng' }}
                             </div>
                         </div>
-                        <NuxtLink :to="`/review/${item.id}`" target="_blank"
+                        <NuxtLink :to="`/exam/review/${item.id}`" target="_blank"
                             class="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-sky-500 hover:text-white hover:border-sky-500 flex items-center justify-center text-xl transition-all duration-300 shadow-sm">
                             <i class="bx bx-right-arrow-alt"></i>
                         </NuxtLink>

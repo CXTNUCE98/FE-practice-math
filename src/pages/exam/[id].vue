@@ -7,6 +7,7 @@ const examId = computed(() => route.params.id as string);
 
 const { data: exam, isPending, error } = useExamDetailQuery(examId);
 const { mutate: submitExam, isPending: isSubmitting, isSuccess: isSubmitted, data: result } = useSubmitExamMutation();
+const showResult = ref(false);
 
 const userAnswers = ref<number[]>([]);
 const timeLeft = ref(0);
@@ -51,7 +52,11 @@ const handleSelectAnswer = (questionIndex: number, answerIndex: number) => {
 const handleAutoSubmit = () => {
   clearInterval(timerInterval);
   if (!isSubmitted.value) {
-    submitExam({ examId: examId.value, answers: userAnswers.value });
+    submitExam({ examId: examId.value, answers: userAnswers.value }, {
+      onSuccess: () => {
+        showResult.value = true;
+      }
+    });
   }
 };
 
@@ -105,7 +110,7 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
     </div>
 
     <!-- Result View -->
-    <div v-else-if="isSubmitted" class="max-w-3xl mx-auto mt-24 px-4 pb-20 animate-fade-in-up">
+    <div v-else-if="showResult" class="max-w-3xl mx-auto mt-24 px-4 pb-20 animate-fade-in-up">
       <div class="glass-card p-10 md:p-16 text-center shadow-2xl relative overflow-hidden">
         <!-- Floating shapes -->
         <div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
@@ -144,7 +149,7 @@ const currentQuestion = computed(() => exam.value?.questions?.[currentQuestionIn
           </div>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button @click="isReviewMode = true; isSubmitted = false"
+            <button @click="isReviewMode = true; showResult = false"
               class="btn-secondary !px-10 !py-4 font-bold order-2 sm:order-1">
               <i class="bx bx-show text-xl"></i>
               Xem lại bài làm
