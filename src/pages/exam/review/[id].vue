@@ -20,7 +20,7 @@ const formatTime = (seconds: number) => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white dark:bg-slate-950 pb-20 selection:bg-blue-600 selection:text-white">
+    <div class="min-h-screen bg-white dark:bg-slate-950 py-20 selection:bg-blue-600 selection:text-white">
         <!-- Decorative Background -->
         <div class="fixed top-0 right-0 w-[400px] h-[400px] bg-blue-400/5 blur-[100px] -z-10 rounded-full"></div>
         <div class="fixed bottom-0 left-0 w-[400px] h-[400px] bg-purple-400/5 blur-[100px] -z-10 rounded-full"></div>

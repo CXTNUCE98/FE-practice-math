@@ -287,9 +287,9 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
                         </div>
                       </div>
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 min-w-40">
                       <span v-if="u.className"
-                        class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-400">
+                        class="px-3 py-1  bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-400">
                         {{ u.className }}
                       </span>
                       <span v-else class="text-slate-300 italic text-sm">Chưa cập nhật</span>

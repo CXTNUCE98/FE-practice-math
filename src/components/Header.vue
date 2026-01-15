@@ -94,9 +94,6 @@ onBeforeUnmount(() => {
                         <i
                             :class="['bx text-lg transition-transform duration-300 group-hover/nav:scale-110', item.icon]"></i>
                         <span>{{ item.name }}</span>
-                        <div v-if="isActive(item.path)"
-                            class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
-                        </div>
                     </NuxtLink>
                 </nav>
 
