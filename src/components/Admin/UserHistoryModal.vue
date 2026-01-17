@@ -35,7 +35,7 @@ const getScoreColor = (score: number) => {
 </script>
 
 <template>
-    <el-dialog v-model="visible" width="850px" @closed="handleClose"
+    <el-dialog v-model="visible" align-center width="850px" @closed="handleClose"
         class="history-dialog !rounded-[2rem] overflow-hidden dark:bg-#0F172A" :show-close="false"
         :destroy-on-close="true">
 

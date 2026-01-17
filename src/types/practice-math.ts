@@ -29,6 +29,19 @@ export interface Question {
 }
 
 /**
+ * Thông tin danh mục
+ */
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  _count?: {
+    exams: number;
+  };
+}
+
+/**
  * Thông tin đề thi
  */
 export interface Exam {
@@ -36,6 +49,8 @@ export interface Exam {
   title: string;
   description?: string;
   duration: number; // Phút
+  categoryId?: string;
+  category?: Category;
   createdAt: string;
   questions?: Question[];
   questionCount?: number;

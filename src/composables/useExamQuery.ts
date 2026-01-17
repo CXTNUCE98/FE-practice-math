@@ -4,14 +4,18 @@ import type { Exam } from "~/types/practice-math";
 /**
  * Query lấy danh sách tất cả đề thi
  */
-export const useExamsQuery = () => {
+export const useExamsQuery = (categoryId?: Ref<string | undefined>) => {
   const { isAuthenticated, getAuthHeaders } = useAuth();
 
   return useQuery({
-    queryKey: ["exams"],
+    queryKey: ["exams", categoryId],
     queryFn: async (): Promise<Exam[]> => {
+      const query: any = {};
+      if (categoryId?.value) query.categoryId = categoryId.value;
+
       const res = await $practiceMathApi("/exams", {
         headers: getAuthHeaders(),
+        query,
       });
       return res as unknown as Exam[];
     },

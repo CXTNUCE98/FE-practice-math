@@ -302,6 +302,35 @@
         ]
       }
     },
+    "/exams/results/{id}": {
+      "get": {
+        "operationId": "ExamController_getResult",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chi tiết kết quả bài thi"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Xem chi tiết kết quả bài đã làm",
+        "tags": [
+          "Quản lý Đề thi (Exams)"
+        ]
+      }
+    },
     "/exams/debug/latest": {
       "get": {
         "operationId": "ExamController_debugLatestExam",

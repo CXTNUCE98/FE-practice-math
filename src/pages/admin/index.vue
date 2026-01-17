@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { useUploadExamMutation, useDeleteExamMutation } from '~/composables/useExamMutation';
 import { useExamsQuery } from '~/composables/useExamQuery';
+import { useCategoriesQuery } from '~/composables/useCategory';
 import { useUsersQuery } from '~/composables/useAdmin';
+
 import UserHistoryModal from '~/components/Admin/UserHistoryModal.vue';
+import CategoryManager from '~/components/Admin/CategoryManager.vue';
 
 definePageMeta({
   layout: 'default',
 });
 
-const { data: exams, refetch: refetchExams } = useExamsQuery();
+const filterCategoryId = ref<string | undefined>(undefined);
+const { data: exams, refetch: refetchExams } = useExamsQuery(filterCategoryId);
+const { data: categories } = useCategoriesQuery();
 const { mutate: uploadExam, isPending, error, isSuccess } = useUploadExamMutation();
 const { mutate: deleteExam, isPending: isDeleting } = useDeleteExamMutation();
 
@@ -41,6 +46,7 @@ const handleDeleteExam = (id: string, title: string) => {
 const examData = reactive({
   title: '',
   duration: 60,
+  categoryId: '',
   file: null as File | null,
 });
 
@@ -58,10 +64,14 @@ const handleUpload = () => {
   formData.append('file', examData.file);
   formData.append('title', examData.title);
   formData.append('duration', examData.duration.toString());
+  if (examData.categoryId) {
+    formData.append('categoryId', examData.categoryId);
+  }
 
   uploadExam(formData, {
     onSuccess: () => {
       examData.title = '';
+      examData.categoryId = '';
       examData.file = null;
       refetchExams();
     },
@@ -76,48 +86,47 @@ const openUserHistory = (user: any) => {
   selectedUser.value = { id: user.id, fullName: user.fullName };
 };
 
-const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
+const activeTab = ref('upload'); // 'upload' | 'exams' | 'users' | 'categories'
 </script>
 
 <template>
   <div class="min-h-screen bg-slate-50 dark:bg-slate-900 ">
-    <!-- Header -->
-    <!-- <div class="bg-slate-900 text-white py-12 px-4 shadow-xl mb-12">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div>
-          <h1 class="text-3xl font-black tracking-tighter uppercase italic">
-            Quản trị <span class="text-sky-400">Đề thi</span>
-          </h1>
-          <p class="text-slate-400 mt-1">Hệ thống quản lý luyện tập và chấm điểm</p>
-        </div>
-        <NuxtLink to="/" class="px-6 py-2 bg-slate-800 hover:bg-slate-700 rounded-full text-sm font-bold transition-all border border-slate-700">
-          Về trang chủ
-        </NuxtLink>
-      </div>
-    </div> -->
-
-    <div class="max-w-7xl mx-auto px-4 pt-40">
+    <div class="max-w-7xl mx-auto px-4 pt-32">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <!-- Sidebar Tabs -->
-        <div class="lg:col-span-1 space-y-2">
-          <button @click="activeTab = 'upload'"
-            class="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all"
-            :class="activeTab === 'upload' ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
-            <i class="bx bx-upload text-xl"></i>
-            Tải lên đề thi
-          </button>
-          <button @click="activeTab = 'exams'"
-            class="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all"
-            :class="activeTab === 'exams' ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
-            <i class="bx bx-file text-xl"></i>
-            Quản lý đề thi
-          </button>
-          <button @click="activeTab = 'users'"
-            class="w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all"
-            :class="activeTab === 'users' ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
-            <i class="bx bx-group text-xl"></i>
-            Quản lý người dùng
-          </button>
+        <div class="lg:col-span-1 space-y-4">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-3xl p-4 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 sticky top-24">
+            <div class="space-y-2">
+              <button @click="activeTab = 'upload'"
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all relative overflow-hidden group"
+                :class="activeTab === 'upload' ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'">
+                <i class="bx bx-upload text-xl"></i>
+                <span class="relative z-10">Tải lên đề thi</span>
+              </button>
+
+              <button @click="activeTab = 'exams'"
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all"
+                :class="activeTab === 'exams' ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'">
+                <i class="bx bx-file text-xl"></i>
+                <span>Quản lý đề thi</span>
+              </button>
+
+              <button @click="activeTab = 'users'"
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all"
+                :class="activeTab === 'users' ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'">
+                <i class="bx bx-group text-xl"></i>
+                <span>Quản lý người dùng</span>
+              </button>
+
+              <button @click="activeTab = 'categories'"
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all"
+                :class="activeTab === 'categories' ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'">
+                <i class="bx bx-category text-xl"></i>
+                <span>Quản lý Danh mục</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Main Content -->
@@ -133,7 +142,7 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
             </h2>
 
             <form @submit.prevent="handleUpload" class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-2">
                   <label class="block text-sm font-bold text-slate-500 uppercase tracking-widest">Tiêu đề đề thi</label>
                   <input v-model="examData.title" type="text" placeholder="Ví dụ: Đề thi HK1 Toán lớp 12"
@@ -141,11 +150,19 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
                     required />
                 </div>
                 <div class="space-y-2">
-                  <label class="block text-sm font-bold text-slate-500 uppercase tracking-widest">Thời gian làm bài
+                  <label class="block text-sm font-bold text-slate-500 uppercase tracking-widest">Thời gian
                     (Phút)</label>
                   <input v-model.number="examData.duration" type="number"
                     class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-sky-500 transition-all font-medium"
                     required />
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-bold text-slate-500 uppercase tracking-widest">Danh mục</label>
+                  <select v-model="examData.categoryId"
+                    class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-sky-500 transition-all font-medium appearance-none">
+                    <option value="">Chọn danh mục</option>
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+                  </select>
                 </div>
               </div>
 
@@ -199,14 +216,27 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
           </div>
 
           <!-- Exams Tab -->
-          <div v-if="activeTab === 'exams'" class="card p-8 animate-fade-in-top">
-            <h2 class="text-2xl font-bold mb-8 text-slate-900 dark:text-white">Danh sách đề thi hiện tại</h2>
+          <div v-if="activeTab === 'exams'"
+            class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 animate-fade-in-up">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+              <h2 class="text-2xl font-black text-slate-900 dark:text-white">Danh sách Thư viện đề</h2>
+              <div class="relative">
+                <select v-model="filterCategoryId"
+                  class="appearance-none pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-sky-500 font-bold text-sm text-slate-700 dark:text-slate-300 cursor-pointer min-w-[200px]">
+                  <option :value="undefined">Tất cả danh mục</option>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+                </select>
+                <i
+                  class="bx bx-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none"></i>
+              </div>
+            </div>
 
             <div class="overflow-hidden border border-slate-100 dark:border-slate-800 rounded-2xl">
               <table class="w-full text-left">
                 <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
                   <tr>
                     <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Tên đề thi</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Danh mục</th>
                     <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Thời gian</th>
                     <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Ngày tạo</th>
                     <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Thao tác</th>
@@ -218,13 +248,24 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
                     <td class="px-6 py-4">
                       <p class="font-bold text-slate-900 dark:text-white">{{ exam.title }}</p>
                     </td>
+                    <td class="px-6 py-4">
+                      <span v-if="exam.category"
+                        class="px-2 py-1 bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-[10px] font-black uppercase rounded-lg">
+                        {{ exam.category.name }}
+                      </span>
+                      <span v-else class="text-slate-300 italic text-xs">Không có</span>
+                    </td>
                     <td class="px-6 py-4 text-slate-600 dark:text-slate-400">
                       {{ exam.duration }} phút
                     </td>
                     <td class="px-6 py-4 text-slate-500 text-sm">
                       {{ new Date(exam.createdAt).toLocaleDateString('vi-VN') }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 flex items-center gap-2">
+                      <NuxtLink :to="`/admin/exams/${exam.id}/edit`"
+                        class="p-2 text-slate-400 hover:text-sky-500 transition-all">
+                        <i class="bx bx-edit text-xl"></i>
+                      </NuxtLink>
                       <button @click="handleDeleteExam(exam.id, exam.title)"
                         class="p-2 text-slate-400 hover:text-red-500 transition-all" :disabled="isDeleting">
                         <i v-if="isDeleting" class="bx bx-loader-alt animate-spin text-xl"></i>
@@ -323,14 +364,18 @@ const activeTab = ref('upload'); // 'upload' | 'exams' | 'users'
               </div>
             </div>
           </div>
+          <!-- Categories Tab -->
+          <div v-if="activeTab === 'categories'">
+            <CategoryManager />
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- User History Modal -->
-    <UserHistoryModal v-if="selectedUser" :userId="selectedUser.id" :fullName="selectedUser.fullName"
-      @close="selectedUser = null" />
   </div>
+
+  <!-- User History Modal -->
+  <UserHistoryModal v-if="selectedUser" :userId="selectedUser.id" :fullName="selectedUser.fullName"
+    @close="selectedUser = null" />
 </template>
 
 <style scoped>

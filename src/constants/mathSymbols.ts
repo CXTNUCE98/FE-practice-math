@@ -1,0 +1,82 @@
+export const MATH_SYMBOL_GROUPS = [
+  {
+    name: "Cơ bản",
+    symbols: [
+      { label: "Phân số", icon: "\\frac{a}{b}", snippet: "\\frac{}{}" },
+      { label: "Căn bậc 2", icon: "\\sqrt{x}", snippet: "\\sqrt{}" },
+      { label: "Căn bậc n", icon: "\\sqrt[n]{x}", snippet: "\\sqrt[]{}" },
+      { label: "Số mũ", icon: "x^n", snippet: "^{}" },
+      { label: "Chỉ số", icon: "x_i", snippet: "_{}" },
+      { label: "Logarit", icon: "\\log_a b", snippet: "\\log_{}" },
+      { label: "Ln", icon: "\\ln x", snippet: "\\ln " },
+      { label: "Trị tuyệt đối", icon: "|x|", snippet: "| |" },
+      { label: "Vô cùng", icon: "\\infty", snippet: "\\infty" },
+    ],
+  },
+  {
+    name: "Đại số",
+    symbols: [
+      { label: "Cộng trừ", icon: "\\pm", snippet: "\\pm" },
+      { label: "Nhân", icon: "\\times", snippet: "\\times" },
+      { label: "Chia", icon: "\\div", snippet: "\\div" },
+      { label: "Khác", icon: "\\neq", snippet: "\\neq" },
+      { label: "Xấp xỉ", icon: "\\approx", snippet: "\\approx" },
+      { label: "Nhỏ hơn bằng", icon: "\\leq", snippet: "\\leq" },
+      { label: "Lớn hơn bằng", icon: "\\geq", snippet: "\\geq" },
+    ],
+  },
+  {
+    name: "Hình học",
+    symbols: [
+      { label: "Góc", icon: "\\angle", snippet: "\\angle" },
+      { label: "Độ", icon: "^\\circ", snippet: "^\\circ" },
+      { label: "Tam giác", icon: "\\triangle", snippet: "\\triangle" },
+      { label: "Vuông góc", icon: "\\perp", snippet: "\\perp" },
+      { label: "Song song", icon: "\\parallel", snippet: "\\parallel" },
+      { label: "Pi", icon: "\\pi", snippet: "\\pi" },
+      { label: "Vectơ", icon: "\\vec{a}", snippet: "\\vec{}" },
+      { label: "Omega", icon: "\\Omega", snippet: "\\Omega" },
+    ],
+  },
+  {
+    name: "Giải tích",
+    symbols: [
+      { label: "Tích phân", icon: "\\int", snippet: "\\int_{}^{} {} \\, dx" },
+      { label: "Giới hạn", icon: "\\lim", snippet: "\\lim_{x \\to \\infty}" },
+      { label: "Đạo hàm", icon: "\\frac{dy}{dx}", snippet: "\\frac{d}{dx}" },
+      { label: "Tổng", icon: "\\sum", snippet: "\\sum_{i=1}^{n}" },
+      { label: "Tích", icon: "\\prod", snippet: "\\prod" },
+    ],
+  },
+  {
+    name: "Tập hợp & Logic",
+    symbols: [
+      { label: "Với mọi", icon: "\\forall", snippet: "\\forall" },
+      { label: "Tồn tại", icon: "\\exists", snippet: "\\exists" },
+      { label: "Thuộc", icon: "\\in", snippet: "\\in" },
+      { label: "Không thuộc", icon: "\\notin", snippet: "\\notin" },
+      { label: "Tập con", icon: "\\subset", snippet: "\\subset" },
+      { label: "Hợp", icon: "\\cup", snippet: "\\cup" },
+      { label: "Giao", icon: "\\cap", snippet: "\\cap" },
+      { label: "Rỗng", icon: "\\emptyset", snippet: "\\emptyset" },
+      { label: "Suy ra", icon: "\\Rightarrow", snippet: "\\Rightarrow" },
+      {
+        label: "Tương đương",
+        icon: "\\Leftrightarrow",
+        snippet: "\\Leftrightarrow",
+      },
+    ],
+  },
+  {
+    name: "Hy Lạp",
+    symbols: [
+      { label: "Alpha", icon: "\\alpha", snippet: "\\alpha" },
+      { label: "Beta", icon: "\\beta", snippet: "\\beta" },
+      { label: "Gamma", icon: "\\gamma", snippet: "\\gamma" },
+      { label: "Delta", icon: "\\Delta", snippet: "\\Delta" },
+      { label: "Theta", icon: "\\theta", snippet: "\\theta" },
+      { label: "Sigma", icon: "\\sigma", snippet: "\\sigma" },
+      { label: "Lambda", icon: "\\lambda", snippet: "\\lambda" },
+    ],
+  },
+];
