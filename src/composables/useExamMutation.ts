@@ -37,16 +37,9 @@ export const useUploadExamMutation = () => {
 
   return useMutation({
     mutationFn: async (formData: FormData): Promise<any> => {
-      // NOTE: Bypass nuxt-api-party proxy for FormData to ensure
-      // correct multipart/form-data handling with all fields (title, duration, file)
-      const config = useRuntimeConfig();
-      const apiBase = config.public.apiBase;
-
-      return await $fetch(`${apiBase}/exams/upload`, {
+      return await $practiceMathApi("/exams/upload", {
         method: "POST",
-        headers: {
-          ...getAuthHeaders(),
-        },
+        headers: getAuthHeaders(),
         body: formData,
       });
     },
