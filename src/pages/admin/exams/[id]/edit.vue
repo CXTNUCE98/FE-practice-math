@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const examId = route.params.id as string;
+const { getAuthHeaders } = useAuth();
 
 const { data: exam, isLoading, refetch } = useExamDetailQuery(examId);
 const { data: categories } = useCategoriesQuery();
@@ -25,8 +26,10 @@ watch(exam, (newVal) => {
 const handleUpdateInfo = async () => {
     try {
         isSaving.value = true;
-        await $fetch(`/api/exams/${examId}`, {
+        // Use $practiceMathApi instead of $fetch
+        await $practiceMathApi(`/exams/${examId}`, {
             method: 'PATCH',
+            headers: getAuthHeaders(),
             body: editData.value
         });
         //@ts-ignore
@@ -47,7 +50,11 @@ const handleDeleteQuestion = async (qId: string) => {
             type: 'warning'
         });
 
-        await $fetch(`/api/questions/${qId}`, { method: 'DELETE' });
+        // Use $practiceMathApi instead of $fetch
+        await $practiceMathApi(`/questions/${qId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        });
         ElMessage.success('Đã xóa câu hỏi');
         refetch();
     } catch (e) {
@@ -57,8 +64,10 @@ const handleDeleteQuestion = async (qId: string) => {
 
 const handleUpdateQuestion = async (qId: string, data: any) => {
     try {
-        await $fetch(`/api/questions/${qId}`, {
+        // Use $practiceMathApi instead of $fetch
+        await $practiceMathApi(`/questions/${qId}`, {
             method: 'PATCH',
+            headers: getAuthHeaders(),
             body: data
         });
         //@ts-ignore
@@ -135,7 +144,7 @@ const activeTab = ref('info'); // 'info' | 'questions'
                                             class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:border-sky-500 transition-all font-bold text-slate-900 dark:text-white appearance-none">
                                             <option value="">Không có</option>
                                             <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name
-                                            }}</option>
+                                                }}</option>
                                         </select>
                                     </div>
                                 </div>
